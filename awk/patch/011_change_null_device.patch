@@ -1,0 +1,11 @@
+--- run.c
++++ run.c
+@@ -2326,7 +2326,7 @@ Cell *closefile(Node **a, int n)
+ 		}
+ 		if (files[i].fp == stdin || files[i].fp == stdout ||
+ 		    files[i].fp == stderr)
+-			stat = freopen("/dev/null", "r+", files[i].fp) == NULL;
++			stat = freopen("NUL:", "r+", files[i].fp) == NULL;
+ 		else if (files[i].mode == '|' || files[i].mode == LE)
+ 			stat = pclose(files[i].fp) == -1;
+ 		else

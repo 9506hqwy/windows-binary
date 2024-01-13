@@ -1,0 +1,9 @@
+--- proto.h
++++ proto.h
+@@ -198,6 +198,4 @@ extern	Cell	*closefile(Node **, int);
+ extern	void	closeall(void);
+ extern	Cell	*dosub(Node **, int);
+ 
+-extern	int	pclose(FILE *);
+-
+ extern  const char	*flags2str(int flags);

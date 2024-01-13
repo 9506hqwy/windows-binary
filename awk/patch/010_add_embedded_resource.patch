@@ -1,0 +1,19 @@
+--- makefile
++++ makefile
+@@ -50,11 +50,14 @@ LISTING = awk.h proto.h awkgram.y lex.c b.c main.c maketab.c parse.c \
+ SHIP = README LICENSE FIXES $(SOURCE) awkgram.tab.[ch].bak makefile  \
+ 	 awk.1
+ 
+-a.out:	awkgram.tab.o $(OFILES)
+-	$(CC) $(CFLAGS) awkgram.tab.o $(OFILES) $(ALLOC)  -lm
++a.out:	awkgram.tab.o $(OFILES) awk.res.o
++	$(CC) $(CFLAGS) awkgram.tab.o $(OFILES) awk.res.o $(ALLOC)  -lm
+ 
+ $(OFILES):	awk.h awkgram.tab.h proto.h
+ 
++awk.res.o: awk.rc
++	x86_64-w64-mingw32-windres awk.rc awk.res.o
++
+ awkgram.tab.c awkgram.tab.h:	awk.h proto.h awkgram.y
+ 	$(YACC) $(YFLAGS) awkgram.y
+ 

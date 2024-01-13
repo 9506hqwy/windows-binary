@@ -1,0 +1,11 @@
+--- run.c
++++ run.c
+@@ -2289,8 +2289,6 @@ FILE *openfile(int a, const char *us, bool *pnewflag)
+ 		files[i].mode = m;
+ 		if (pnewflag)
+ 			*pnewflag = true;
+-		if (fp != stdin && fp != stdout && fp != stderr)
+-			(void) fcntl(fileno(fp), F_SETFD, FD_CLOEXEC);
+ 	}
+ 	return fp;
+ }

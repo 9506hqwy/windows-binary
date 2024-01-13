@@ -1,0 +1,11 @@
+--- run.c
++++ run.c
+@@ -1095,7 +1095,7 @@ int format(char **pbuf, int *pbufsize, const char *s, Node *a)	/* printf-like co
+ 		char xbuf[100];
+ 
+ 		snprintf(xbuf, sizeof(xbuf), "%a", 42.0);
+-		have_a_format = (strcmp(xbuf, "0x1.5p+5") == 0);
++		have_a_format = (strcmp(xbuf, "0xa.8p+2") == 0);
+ 		first = false;
+ 	}
+ 

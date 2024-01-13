@@ -1,0 +1,22 @@
+--- main.c
++++ main.c
+@@ -141,7 +141,7 @@ int main(int argc, char *argv[])
+ 
+ 	/* Set and keep track of the random seed */
+ 	srand_seed = 1;
+-	srandom((unsigned long) srand_seed);
++	srand((unsigned long) srand_seed);
+ 
+ 	yyin = NULL;
+ 	symtab = makesymtab(NSYMTAB/NSYMTAB);
+--- run.c
++++ run.c
+@@ -2138,7 +2138,7 @@ Cell *bltin(Node **a, int n)	/* builtin functions. a[0] is type, a[1] is arg lis
+ 		else
+ 			u = getfval(x);
+ 		tmp = u;
+-		srandom((unsigned long) u);
++		srand((unsigned long) u);
+ 		u = srand_seed;
+ 		srand_seed = tmp;
+ 		break;

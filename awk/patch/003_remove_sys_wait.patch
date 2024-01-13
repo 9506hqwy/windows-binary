@@ -1,0 +1,41 @@
+--- run.c
++++ run.c
+@@ -35,7 +35,6 @@ THIS SOFTWARE.
+ #include <stdlib.h>
+ #include <time.h>
+ #include <sys/types.h>
+-#include <sys/wait.h>
+ #include "awk.h"
+ #include "awkgram.tab.h"
+ 
+@@ -2067,7 +2066,6 @@ Cell *bltin(Node **a, int n)	/* builtin functions. a[0] is type, a[1] is arg lis
+ 	Node *nextarg;
+ 	FILE *fp;
+ 	int status = 0;
+-	int estatus = 0;
+ 
+ 	t = ptoi(a[0]);
+ 	x = execute(a[1]);
+@@ -2110,21 +2108,7 @@ Cell *bltin(Node **a, int n)	/* builtin functions. a[0] is type, a[1] is arg lis
+ 		break;
+ 	case FSYSTEM:
+ 		fflush(stdout);		/* in case something is buffered already */
+-		estatus = status = system(getsval(x));
+-		if (status != -1) {
+-			if (WIFEXITED(status)) {
+-				estatus = WEXITSTATUS(status);
+-			} else if (WIFSIGNALED(status)) {
+-				estatus = WTERMSIG(status) + 256;
+-#ifdef WCOREDUMP
+-				if (WCOREDUMP(status))
+-					estatus += 256;
+-#endif
+-			} else	/* something else?!? */
+-				estatus = 0;
+-		}
+-		/* else estatus was set to -1 */
+-		u = estatus;
++		u = status = system(getsval(x));
+ 		break;
+ 	case FRAND:
+ 		/* rand() returns numbers in [0..2^31-1]
