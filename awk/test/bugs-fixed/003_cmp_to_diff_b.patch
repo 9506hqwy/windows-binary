@@ -1,0 +1,15 @@
+--- bugs-fixed/REGRESS
++++ bugs-fixed/REGRESS
+@@ -20,10 +20,10 @@ do
+ 	fi
+ 
+ 	../a.exe -f $i $input > $OUT 2>&1
+-	if cmp -s $OK $OUT
++	if diff -b $OK $OUT > foo3
+ 	then
+ 		rm -f $OUT
+-	elif [ -f $OK2 ] && cmp -s $OK2 $OUT
++	elif [ -f $OK2 ] && diff -b $OK2 $OUT > foo3
+ 	then
+ 		rm -f $OUT
+ 	else

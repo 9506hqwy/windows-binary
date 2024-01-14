@@ -1,0 +1,14 @@
+--- testdir/T.arnold
++++ testdir/T.arnold
+@@ -7,6 +7,11 @@ cd arnold-fixes
+ 
+ pwd
+ 
++for p in $(ls ../../../test/testdir/arnold-fixes/*.patch)
++do
++  patch -p 2 -u < $p
++done
++
+ awk=../../a.exe
+ ls -l $awk
+ 

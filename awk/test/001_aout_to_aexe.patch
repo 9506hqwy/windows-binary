@@ -1,0 +1,11 @@
+--- REGRESS
++++ REGRESS
+@@ -2,7 +2,7 @@
+ 
+ case `uname` in
+ CYGWIN)	EXE=a.exe ;;
+-*)	EXE=a.out ;;
++*)	EXE=a.exe ;;
+ esac
+ 
+ if [ ! -f $EXE ]

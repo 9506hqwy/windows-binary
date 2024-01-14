@@ -1,0 +1,11 @@
+--- testdir/T.split
++++ testdir/T.split
+@@ -2,7 +2,7 @@
+ 
+ awk=${awk-../a.exe}
+ 
+-WORKDIR=$(mktemp -d /tmp/nawktest.XXXXXX)
++WORKDIR='.'
+ 
+ TEMP0=$WORKDIR/test.temp.0
+ TEMP1=$WORKDIR/test.temp.1

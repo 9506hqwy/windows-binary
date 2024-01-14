@@ -1,0 +1,39 @@
+--- testdir/Compare.tt
++++ testdir/Compare.tt
+@@ -3,11 +3,11 @@
+ oldawk=${oldawk-awk}
+ awk=${awk-../a.exe}
+ 
+-echo compiling time.c
+-cc time.c -o time
+-time=./time
++#echo compiling time.c
++#cc time.c -o time
++#time=./time
+ 
+-echo time command = $time
++#echo time command = $time
+ 
+ #case `uname` in
+ #SunOS)
+@@ -18,7 +18,7 @@ echo time command = $time
+ #	time=time ;;
+ #esac
+ 
+-echo oldawk = $oldawk, awk = $awk, time command = $time
++echo oldawk = $oldawk, awk = $awk, time command = time
+ 
+ 
+ # an arbitrary collection of input data
+@@ -37,9 +37,9 @@ for i in $*
+ do
+ 	echo $i "($oldawk vs $awk)":
+ 	# ind <$i
+-	$time $oldawk -f $i $td >foo2 2>foo2t
++	time $oldawk -f $i $td >foo2 2>foo2t
+ 	cat foo2t
+-	$time $awk -f $i $td >foo1 2>foo1t
++	time $awk -f $i $td >foo1 2>foo1t
+ 	cat foo1t
+ 	diff -b foo1 foo2
+ 	echo $i: >>footot

@@ -1,0 +1,44 @@
+--- testdir/T.csv
++++ testdir/T.csv
+@@ -7,7 +7,7 @@ awk=${awk-../a.exe}
+ $awk '
+ BEGIN {
+ 	FS = "\t"
+-	awk = "../a.exe --csv"
++	awk = "..\\a.exe --csv"
+ }
+ NF == 0 || $1 ~ /^#/ {
+ 	next
+--- testdir/T.expr
++++ testdir/T.expr
+@@ -7,7 +7,7 @@ awk=${awk-../a.exe}
+ $awk '
+ BEGIN {
+ 	FS = "\t"
+-	awk = "../a.exe"
++	awk = "..\\a.exe"
+ }
+ NF == 0 || $1 ~ /^#/ {
+ 	next
+--- testdir/T.lilly
++++ testdir/T.lilly
+@@ -17,7 +17,7 @@ $awk '
+ 	print $0 >"foo"
+ 	close("foo")
+ 	print "###", NR, $0
+-	system("../a.exe -f foo <\"lilly.ifile\" ")
++	system("..\\a.exe -f foo <\"lilly.ifile\" ")
+ }' <lilly.progs >foo2 2>&1
+ 
+ echo `cat lilly.progs | wc -l` tests
+--- testdir/T.utf
++++ testdir/T.utf
+@@ -7,7 +7,7 @@ awk=${awk-../a.exe}
+ $awk '
+ BEGIN {
+ 	FS = "\t"
+-	awk = "../a.exe"
++	awk = "..\\a.exe"
+ }
+ NF == 0 || $1 ~ /^#/ {
+ 	next

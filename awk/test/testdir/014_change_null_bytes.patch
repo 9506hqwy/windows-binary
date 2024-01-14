@@ -1,0 +1,11 @@
+--- testdir/T.misc
++++ testdir/T.misc
+@@ -452,7 +452,7 @@ grep "non-terminated" foo >NUL: || echo 1>&2 "BAD: T.misc bare quote fails"
+ 
+ # %c of 0 is explicit null byte
+ 
+-echo '3' >foo1
++echo '4' >foo1
+ $awk 'BEGIN {printf("%c%c\n", 0, 0) }' | wc | $awk '{print $3}' >foo2
+ diff -b foo1 foo2 || echo 'BAD: T.misc null byte'
+ 

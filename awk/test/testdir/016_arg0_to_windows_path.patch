@@ -1,0 +1,32 @@
+--- testdir/T.argv
++++ testdir/T.argv
+@@ -1,5 +1,7 @@
+ echo T.argv: misc tests of argc and argv
+ 
++EXE_PATH=$(cygpath -w ../a.exe)
++
+ awk=${awk-../a.exe}
+ 
+ echo >foo1
+@@ -39,7 +41,7 @@ BEGIN {
+ }
+ ' a bc def gh >foo1
+ echo "5
+-$awk
++$EXE_PATH
+ a
+ bc
+ def
+@@ -131,9 +133,9 @@ diff -b foo3 foo4 || echo 'BAD: T.argv startup FILENAME'
+ 
+ 
+ # test data balanced on pinhead...
+-echo 'ARGV[3] is NUL:
+-ARGV[0] is ../a.exe
+-ARGV[1] is NUL:' >foo1
++echo "ARGV[3] is NUL:
++ARGV[0] is $EXE_PATH
++ARGV[1] is NUL:" >foo1
+ 
+ $awk 'BEGIN {   # this is a variant of arnolds original example
+         ARGV[1] = "NUL:"

@@ -1,0 +1,278 @@
+old mode 100755
+new mode 100644
+--- testdir/T.csv
++++ testdir/T.csv
+@@ -17,7 +17,7 @@ $1 ~ /try/ {	# new test
+ 	sub(/try /, "")
+ 	prog = $0
+ 	printf("%3d  %s\n", nt, prog)
+-	prog = sprintf("%s '"'"'%s'"'"'", awk, prog)
++	prog = sprintf("%s \"%s\"", awk, prog)
+ 	# print "prog is", prog
+ 	nt2 = 0
+ 	while (getline > 0) {
+@@ -26,12 +26,12 @@ $1 ~ /try/ {	# new test
+ 		input = $1
+ 		for (i = 2; i < NF; i++)	# input data
+ 			input = input "\t" $i
+-		test = sprintf(".\\echo.exe '"'"'%s'"'"' | %s >foo1; ",
++		test = sprintf(".\\echo.exe \"%s\" | %s >foo1",
+ 			input, prog)
+ 		if ($NF == "\"\"")
+-			output = ">foo2;"
++			output = ".\\echo.exe -n >foo2"
+ 		else
+-			output = sprintf(".\\echo.exe '"'"'%s'"'"' >foo2; ", $NF)
++			output = sprintf(".\\echo.exe \"%s\" >foo2", $NF)
+ 		gsub(/\\t/, "\t", output)
+ 		gsub(/\\n/, "\n", output)
+ 		run = sprintf("diff -b foo1 foo2 || echo test %d.%d failed",
+@@ -40,7 +40,9 @@ $1 ~ /try/ {	# new test
+ 		# print  "test is", test
+ 		# print  "output is", output
+ 		# print  "run is", run
+-		system(test output run)
++		system(test)
++		system(output)
++		system(run)
+ 	}
+ 	tt += nt2
+ }
+@@ -53,28 +55,28 @@ END { print tt, "tests" }
+ # ... terminated by blank line
+ 
+ 
+-try  { for (i=1; i<=NF; i++) printf("[%s]", $i); printf("\n") }
++try  { for (i=1; i<=NF; i++) printf(\"[%s]\", $i); printf(\"\n\") }
+ a	[a]
+   a	[  a]
+ ,a	[][a]
+  , a	[ ][ a]
+ a,b	[a][b]
+ a,b,c	[a][b][c]
+-""	[]
+-"abc"	[abc]
+-"a""b"	[a"b]
+-"a","b"	[a][b]
+-a""b	[a""b]
+-"a,b"	[a,b]
+-""""	["]
+-""""""	[""]
+-"""x"""	["x"]
+-""","""	[","]
+-,,""	[][][]
+-a""b	[a""b]
++\"\"	[]
++\"abc\"	[abc]
++\"a\"\"b\"	[a\""b]
++\"a\",\"b\"	[a][b]
++a\"\"b	[a\"\"b]
++\"a,b\"	[a,b]
++\"\"\"\"	[\""]
++\"\"\"\"\"\"	[\"\"]
++\"\"\"x\"\"\"	[\"x\"]
++\"\"\",\"\"\"	[\",\"]
++,,\"\"	[][][]
++a\"\"b	[a\"\"b]
+ a''b	[a''b]
+ ,,	[][][]
+ a,	[a][]
+-"",	[][]
++\"\",	[][]
+ ,	[][]
+ !!!!
+old mode 100755
+new mode 100644
+--- testdir/T.expr
++++ testdir/T.expr
+@@ -17,7 +17,7 @@ $1 ~ /try/ {	# new test
+ 	sub(/try /, "")
+ 	prog = $0
+ 	printf("%3d  %s\n", nt, prog)
+-	prog = sprintf("%s -F\"\\t\" '"'"'%s'"'"'", awk, prog)
++	prog = sprintf("%s -F\"\\t\" \"%s\"", awk, prog)
+ 	# print "prog is", prog
+ 	nt2 = 0
+ 	while (getline > 0) {
+@@ -26,12 +26,12 @@ $1 ~ /try/ {	# new test
+ 		input = $1
+ 		for (i = 2; i < NF; i++)	# input data
+ 			input = input "\t" $i
+-		test = sprintf(".\\echo.exe '"'"'%s'"'"' | %s >foo1; ",
++		test = sprintf(".\\echo.exe \"%s\" | %s >foo1",
+ 			input, prog)
+ 		if ($NF == "\"\"")
+-			output = ">foo2;"
++			output = ".\\echo.exe -n >foo2"
+ 		else
+-			output = sprintf(".\\echo.exe '"'"'%s'"'"' >foo2; ", $NF)
++			output = sprintf(".\\echo.exe \"%s\" >foo2", $NF)
+ 		gsub(/\\t/, "\t", output)
+ 		gsub(/\\n/, "\n", output)
+ 		run = sprintf("diff -b foo1 foo2 || echo test %d.%d failed",
+@@ -40,7 +40,9 @@ $1 ~ /try/ {	# new test
+ 		# print  "test is", test
+ 		# print  "output is", output
+ 		# print  "run is", run
+-		system(test output run)
++		system(test)
++		system(output)
++		system(run)
+ 	}
+ 	tt += nt2
+ }
+@@ -54,7 +56,7 @@ END { print tt, "tests" }
+ 
+ # try another program...
+ 
+-try { print ($1 == 1) ? "yes" : "no" }
++try { print ($1 == 1) ? \"yes\" : \"no\" }
+ 1	yes
+ 1.0	yes
+ 1E0	yes
+@@ -147,32 +149,32 @@ try { print $1, +$1, -$1, - -$1 }
+ 0	0 0 0 0
+ x	x 0 0 0
+ 
+-try { printf("a%*sb\n", $1, $2) }
++try { printf(\"a%*sb\n\", $1, $2) }
+ 1	x	axb
+ 2	x	a xb
+ 3	x	a  xb
+ 
+-try { printf("a%-*sb\n", $1, $2) }
++try { printf(\"a%-*sb\n\", $1, $2) }
+ 1	x	axb
+ 2	x	ax b
+ 3	x	ax  b
+ 
+-try { printf("a%*.*sb\n", $1, $2, "hello") }
++try { printf(\"a%*.*sb\n\", $1, $2, \"hello\") }
+ 1	1	ahb
+ 2	1	a hb
+ 3	1	a  hb
+ 
+-try { printf("a%-*.*sb\n", $1, $2, "hello") }
++try { printf(\"a%-*.*sb\n\", $1, $2, \"hello\") }
+ 1	1	ahb
+ 2	1	ah b
+ 3	1	ah  b
+ 
+-try { printf("%d %ld %lld %zd %jd %hd %hhd\n", $1, $1, $1, $1, $1, $1, $1) }
++try { printf(\"%d %ld %lld %zd %jd %hd %hhd\n\", $1, $1, $1, $1, $1, $1, $1) }
+ 1	1 1 1 1 1 1 1
+ 10	10 10 10 10 10 10 10
+ 10000	10000 10000 10000 10000 10000 10000 10000
+ 
+-try { printf("%x %lx %llx %zx %jx %hx %hhx\n", $1, $1, $1, $1, $1, $1, $1) }
++try { printf(\"%x %lx %llx %zx %jx %hx %hhx\n\", $1, $1, $1, $1, $1, $1, $1) }
+ 1	1 1 1 1 1 1 1
+ 10	a a a a a a a
+ 10000	2710 2710 2710 2710 2710 2710 2710
+old mode 100755
+new mode 100644
+old mode 100755
+new mode 100644
+--- testdir/T.utf
++++ testdir/T.utf
+@@ -17,7 +17,7 @@ $1 ~ /try/ {	# new test
+ 	sub(/try [a-zA-Z_0-9]+ /, "")
+ 	prog = $0
+ 	printf("try %3d %s\n", nt, prog)
+-	prog = sprintf("%s -F\"\\t\" '"'"'%s'"'"'", awk, prog)
++	prog = sprintf("%s -F\"\\t\" \"%s\"", awk, prog)
+ 	# print "prog is", prog
+ 	nt2 = 0
+ 	while (getline > 0) {
+@@ -26,12 +26,12 @@ $1 ~ /try/ {	# new test
+ 		input = $1
+ 		for (i = 2; i < NF; i++)	# input data
+ 			input = input "\t" $i
+-		test = sprintf(".\\echo.exe '"'"'%s'"'"' | %s >foo1; ",
++		test = sprintf(".\\echo.exe \"%s\" | %s >foo1",
+ 			input, prog)
+ 		if ($NF == "\"\"")
+-			output = ">foo2;"
++			output = ".\\echo.exe -n >foo2"
+ 		else
+-			output = sprintf(".\\echo.exe '"'"'%s'"'"' >foo2; ", $NF)
++			output = sprintf(".\\echo.exe \"%s\" >foo2", $NF)
+ 		gsub(/\\t/, "\t", output)
+ 		gsub(/\\n/, "\n", output)
+ 		run = sprintf("diff foo1 foo2 || echo test %d.%d failed",
+@@ -40,7 +40,9 @@ $1 ~ /try/ {	# new test
+ 		# print  "test is", test
+ 		# print  "output is", output
+ 		# print  "run is", run
+-		system(test output run)
++		system(test)
++		system(output)
++		system(run)
+ 	}
+ 	tt += nt2
+ }
+@@ -82,7 +84,7 @@ try index { print index($1, $2) }
+ abc	a	1
+ abc	b	2
+ abc	x	0
+-现在是时候了	""	0
++现在是时候了	\"\"	0
+ 现在是时候了	了	6
+ 现在是时候了	在是	2
+ 现在是时候了	x	0
+@@ -144,7 +146,7 @@ xxxΤωρα ειναι η	[Α-Ω]	4 4 1
+ να έρθει στο πά	[^ν]	2 2 1
+ 
+ # FS="" should split into unicode chars
+-try emptyFS BEGIN {FS=""} {print NF}
++try emptyFS BEGIN {FS=\"\"} {print NF}
+ すべての善人のために	10
+ の今がその時だ	7
+ Сейчас	6
+@@ -155,7 +157,7 @@ try emptyFS BEGIN {FS=""} {print NF}
+ 🖕 finger	8
+ 
+ # printf(%N.Ns) for utf8 strings
+-try printfs1 {printf("[%5.2s][%-5.2s]\n"), $1, $1}
++try printfs1 {printf(\"[%5.2s][%-5.2s]\n\"), $1, $1}
+ abcd	[   ab][ab   ]
+ 现在abc	[   现在][现在   ]
+ 现ωabc	[   现ω][现ω   ]
+@@ -165,7 +167,7 @@ abcd	[   ab][ab   ]
+ 😀	[    😀][😀    ]
+ 
+ # printf(%N.Ns) for utf8 strings
+-try printfs2 {printf("[%5s][%-5s]\n"), $1, $1}
++try printfs2 {printf(\"[%5s][%-5s]\n\"), $1, $1}
+ abcd	[ abcd][abcd ]
+ 现在ab	[ 现在ab][现在ab ]
+ a现在ab	[a现在ab][a现在ab]
+@@ -176,7 +178,7 @@ a现在abc	[a现在abc][a现在abc]
+ 😀	[    😀][😀    ]
+ 
+ # printf(%N.Ns) for utf8 strings
+-try printfs3 {printf("[%.2s][%-.2s]\n"), $1, $1}
++try printfs3 {printf(\"[%.2s][%-.2s]\n\"), $1, $1}
+ abcd	[ab][ab]
+ 现在abc	[现在][现在]
+ 现ωabc	[现ω][现ω]
+@@ -184,7 +186,7 @@ abcd	[ab][ab]
+ 😀	[😀][😀]
+ 
+ # printf(%c) for utf
+-try printfc {printf("%c %c\n", $1, substr($1,2,1))}
++try printfc {printf(\"%c %c\n\", $1, substr($1,2,1))}
+ すべての善人のために	す べ
+ の今がその時だ	の 今
+ Сейчас	С е
+--- testdir/chem.awk
++++ testdir/chem.awk
+@@ -63,7 +63,7 @@ $1 ~ /^[A-Z].*:$/ {	# label;  falls thru after shifting left
+ 	shiftfields(1)
+ }
+ 
+-$1 ~ /^\"/	{ print "Last: ", $0; last = OTHER; next }
++$1 ~ /^\\"/	{ print "Last: ", $0; last = OTHER; next }
+ 
+ $1 ~ /bond/	{ bond($1); next }
+ $1 ~ /^(double|triple|front|back)$/ && $2 == "bond" {

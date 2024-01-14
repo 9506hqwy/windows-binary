@@ -1,0 +1,40 @@
+--- bugs-fixed/REGRESS
++++ bugs-fixed/REGRESS
+@@ -1,6 +1,6 @@
+ #! /bin/sh
+ 
+-if [ ! -f ../a.out ]
++if [ ! -f ../a.exe ]
+ then
+ 	echo Making executable
+ 	(cd .. ; make) || exit 0
+@@ -19,7 +19,7 @@ do
+ 		input=$IN
+ 	fi
+ 
+-	../a.out -f $i $input > $OUT 2>&1
++	../a.exe -f $i $input > $OUT 2>&1
+ 	if cmp -s $OK $OUT
+ 	then
+ 		rm -f $OUT
+--- bugs-fixed/missing-precision.ok
++++ bugs-fixed/missing-precision.ok
+@@ -1,2 +1,2 @@
+-../a.out: not enough args in printf(%*s)
++../a.exe: not enough args in printf(%*s)
+  source line number 1
+--- bugs-fixed/negative-nf.ok
++++ bugs-fixed/negative-nf.ok
+@@ -1,2 +1,2 @@
+-../a.out: cannot set NF to a negative value
++../a.exe: cannot set NF to a negative value
+  source line number 1
+--- bugs-fixed/pfile-overflow.ok
++++ bugs-fixed/pfile-overflow.ok
+@@ -1,4 +1,4 @@
+-../a.out: syntax error at source line 1 source file pfile-overflow.awk
++../a.exe: syntax error at source line 1 source file pfile-overflow.awk
+  context is
+ 	 >>>  <<< 
+-../a.out: bailing out at source line 1 source file pfile-overflow.awk
++../a.exe: bailing out at source line 1 source file pfile-overflow.awk

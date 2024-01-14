@@ -1,0 +1,31 @@
+--- testdir/T.-f-f
++++ testdir/T.-f-f
+@@ -12,7 +12,7 @@ diff -b foo foo3 || echo 'BAD: T.-f-f multiple -fs'
+ 
+ 
+ echo '/a/' | $awk -f - ./passwd >foo1
+-$awk '/a/' ./passwd >foo2
++MSYS_NO_PATHCONV=1 $awk '/a/' ./passwd >foo2
+ diff -b foo1 foo2 || echo 'BAD: T.-f-f  -f -'
+ 
+ 
+--- testdir/T.misc
++++ testdir/T.misc
+@@ -69,7 +69,7 @@ diff -b foo1 foo2 || echo 1>&2 "BAD: T.misc bad overflow"
+ echo '#
+ code  1
+ code  2' |
+-$awk '/^#/' >foo1
++MSYS_NO_PATHCONV=1 $awk '/^#/' >foo1
+ echo '#' >foo2
+ diff -b foo1 foo2 || echo 1>&2 "BAD: T.misc bad match of 8-bit char"
+ 
+@@ -458,7 +458,7 @@ diff -b foo1 foo2 || echo 'BAD: T.misc null byte'
+ 
+ # non-terminated RE
+ 
+-$awk /xyz >foo 2>&1
++MSYS_NO_PATHCONV=1 $awk /xyz >foo 2>&1
+ grep "non-terminated" foo >NUL: || echo 1>&2 "BAD: T.misc non-terminated RE"
+ 
+ # next several were infinite loops, found by brian tsang.

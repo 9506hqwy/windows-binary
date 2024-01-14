@@ -1,0 +1,15 @@
+--- bugs-fixed/REGRESS
++++ bugs-fixed/REGRESS
+@@ -6,6 +6,12 @@ then
+ 	(cd .. ; make) || exit 0
+ fi
+ 
++EXE_PATH=$(cygpath -w ../a.exe)
++EXE_PATH=${EXE_PATH//\\/\\\\}
++sed -i -e "s|../a.exe|${EXE_PATH}|g" missing-precision.ok
++sed -i -e "s|../a.exe|${EXE_PATH}|g" negative-nf.ok
++sed -i -e "s|../a.exe|${EXE_PATH}|g" pfile-overflow.ok
++
+ for i in *.awk
+ do
+ 	echo === $i

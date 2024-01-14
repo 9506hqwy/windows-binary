@@ -1,0 +1,845 @@
+--- testdir/Compare.T1
++++ testdir/Compare.T1
+@@ -1,6 +1,6 @@
+ 
+ oldawk=${oldawk-awk}
+-awk=${awk-../a.out}
++awk=${awk-../a.exe}
+ 
+ echo oldawk=$oldawk, awk=$awk
+ 
+--- testdir/Compare.drek
++++ testdir/Compare.drek
+@@ -16,7 +16,7 @@ do
+ 	cd ..
+ 	echo testdir/$i:
+ 	ind <testdir/$i
+-	a.out -f testdir/$i >drek.c
++	a.exe -f testdir/$i >drek.c
+ 	cat drek.c
+ 	make drek || ( echo $i '	' bad compile; echo $i '	' bad compile >/dev/tty; continue )
+ 	cd testdir
+--- testdir/Compare.p
++++ testdir/Compare.p
+@@ -1,6 +1,6 @@
+ 
+ oldawk=${oldawk-awk}
+-awk=${awk-../a.out}
++awk=${awk-../a.exe}
+ 
+ echo oldawk=$oldawk, awk=$awk
+ 
+--- testdir/Compare.t
++++ testdir/Compare.t
+@@ -1,6 +1,6 @@
+ 
+ oldawk=${oldawk-myawk}
+-awk=${awk-../a.out}
++awk=${awk-../a.exe}
+ 
+ echo oldawk=$oldawk, awk=$awk
+ 
+--- testdir/Compare.tt
++++ testdir/Compare.tt
+@@ -1,7 +1,7 @@
+ #!/bin/sh
+ 
+ oldawk=${oldawk-awk}
+-awk=${awk-../a.out}
++awk=${awk-../a.exe}
+ 
+ echo compiling time.c
+ cc time.c -o time
+--- testdir/REGRESS
++++ testdir/REGRESS
+@@ -4,7 +4,7 @@ uname -a
+ cc echo.c -o echo && echo echo compiled
+ 
+ oldawk=${oldawk-awk}
+-awk=${awk-../a.out}
++awk=${awk-../a.exe}
+ 
+ echo oldawk=$oldawk, awk=$awk 
+ 
+--- testdir/T.-f-f
++++ testdir/T.-f-f
+@@ -1,7 +1,7 @@
+ #!/bin/sh
+ echo T.-f-f: check multiple -f arguments
+ 
+-awk=${awk-../a.out}
++awk=${awk-../a.exe}
+ 
+ echo 'begin
+ end' >foo
+--- testdir/T.argv
++++ testdir/T.argv
+@@ -1,6 +1,6 @@
+ echo T.argv: misc tests of argc and argv
+ 
+-awk=${awk-../a.out}
++awk=${awk-../a.exe}
+ 
+ echo >foo1
+ echo >foo2
+@@ -132,7 +132,7 @@ diff foo3 foo4 || echo 'BAD: T.argv startup FILENAME'
+ 
+ # test data balanced on pinhead...
+ echo 'ARGV[3] is /dev/null
+-ARGV[0] is ../a.out
++ARGV[0] is ../a.exe
+ ARGV[1] is /dev/null' >foo1
+ 
+ $awk 'BEGIN {   # this is a variant of arnolds original example
+--- testdir/T.arnold
++++ testdir/T.arnold
+@@ -7,7 +7,7 @@ cd arnold-fixes
+ 
+ pwd
+ 
+-awk=../../a.out
++awk=../../a.exe
+ ls -l $awk
+ 
+ for i in *.awk
+--- testdir/T.builtin
++++ testdir/T.builtin
+@@ -1,6 +1,6 @@
+ echo T.builtin: test miscellaneous builtin functions
+ 
+-awk=${awk-../a.out}
++awk=${awk-../a.exe}
+ 
+ $awk 'BEGIN { print index(123, substr(123, 2)) }' >foo1
+ echo 2 >foo2
+--- testdir/T.chem
++++ testdir/T.chem
+@@ -1,6 +1,6 @@
+ echo T.chem:  test chem.awk
+ 
+-awk=${awk-../a.out}
++awk=${awk-../a.exe}
+ oldawk=${oldawk-awk}
+ 
+ for i in lsd1.p penicil.p res.p
+--- testdir/T.close
++++ testdir/T.close
+@@ -1,6 +1,6 @@
+ echo T.close: test close built-in
+ 
+-awk=${awk-../a.out}
++awk=${awk-../a.exe}
+ 
+ rm -f foo
+ $awk '{ print >>"foo"; close("foo") }' /etc/passwd
+--- testdir/T.clv
++++ testdir/T.clv
+@@ -1,7 +1,7 @@
+ #!/bin/sh
+ echo T.clv: check command-line variables
+ 
+-awk=${awk-../a.out}
++awk=${awk-../a.exe}
+ 
+ rm -f core
+ 
+--- testdir/T.csconcat
++++ testdir/T.csconcat
+@@ -1,6 +1,6 @@
+ echo T.csconcat: test constant string concatentation
+ 
+-awk=${awk-../a.out}
++awk=${awk-../a.exe}
+ 
+ $awk '
+ BEGIN {
+--- testdir/T.csv
++++ testdir/T.csv
+@@ -2,12 +2,12 @@
+ 
+ echo T.csv: tests of csv field splitting, no embedded newlines
+ 
+-awk=${awk-../a.out}
++awk=${awk-../a.exe}
+ 
+ $awk '
+ BEGIN {
+ 	FS = "\t"
+-	awk = "../a.out --csv"
++	awk = "../a.exe --csv"
+ }
+ NF == 0 || $1 ~ /^#/ {
+ 	next
+--- testdir/T.delete
++++ testdir/T.delete
+@@ -1,6 +1,6 @@
+ echo T.delete: misc tests of array deletion
+ 
+-awk=${awk-../a.out}
++awk=${awk-../a.exe}
+ 
+ echo '1 2 3 4
+ 1 2 3
+--- testdir/T.errmsg
++++ testdir/T.errmsg
+@@ -1,6 +1,6 @@
+ echo T.errmsg:  check some error messages
+ 
+-awk=${awk-../a.out}
++awk=${awk-../a.exe}
+ 
+ ls >glop
+ awk=$awk awk  '
+--- testdir/T.expr
++++ testdir/T.expr
+@@ -2,12 +2,12 @@
+ 
+ echo T.expr: tests of miscellaneous expressions
+ 
+-awk=${awk-../a.out}
++awk=${awk-../a.exe}
+ 
+ $awk '
+ BEGIN {
+ 	FS = "\t"
+-	awk = "../a.out"
++	awk = "../a.exe"
+ }
+ NF == 0 || $1 ~ /^#/ {
+ 	next
+--- testdir/T.exprconv
++++ testdir/T.exprconv
+@@ -1,6 +1,6 @@
+ echo T.exprconv:  check conversion of expr to number
+ 
+-awk=${awk-../a.out}
++awk=${awk-../a.exe}
+ 
+ $awk '
+ BEGIN {	x = (1 > 0); print x
+--- testdir/T.flags
++++ testdir/T.flags
+@@ -1,6 +1,6 @@
+ echo T.flags: test some commandline flags
+ 
+-awk=${awk-../a.out}
++awk=${awk-../a.exe}
+ 
+ $awk >foo 2>&1
+ grep '[Uu]sage' foo >/dev/null || echo 'T.flags: bad usage'
+--- testdir/T.func
++++ testdir/T.func
+@@ -1,6 +1,6 @@
+ echo T.func: test user-defined functions
+ 
+-awk=${awk-../a.out}
++awk=${awk-../a.exe}
+ 
+ echo '10 2
+ 2 10
+--- testdir/T.gawk
++++ testdir/T.gawk
+@@ -1,7 +1,7 @@
+ echo T.gawk: tests adapted from gawk test suite
+ # for which thanks.
+ 
+-awk=${awk-../a.out}
++awk=${awk-../a.exe}
+ 
+ # arrayref:  
+ ./echo '1
+--- testdir/T.getline
++++ testdir/T.getline
+@@ -1,6 +1,6 @@
+ echo T.getline: test getline function
+ 
+-awk=${awk-../a.out}
++awk=${awk-../a.exe}
+ 
+ who >foo1
+ cat foo1 | $awk '
+--- testdir/T.int-expr
++++ testdir/T.int-expr
+@@ -1,6 +1,6 @@
+ echo T.int-expr: test interval expressions
+ 
+-awk=${awk-../a.out}
++awk=${awk-../a.exe}
+ 
+ rm -f foo
+ 
+--- testdir/T.latin1
++++ testdir/T.latin1
+@@ -1,6 +1,6 @@
+ echo T.latin1: tests of 8-bit input
+ 
+-awk=${awk-../a.out}
++awk=${awk-../a.exe}
+ 
+ $awk '
+ { print $0 }
+--- testdir/T.lilly
++++ testdir/T.lilly
+@@ -1,6 +1,6 @@
+ echo T.lilly: miscellaneous RE tests from Bruce Lilly
+ 
+-awk=${awk-../a.out}
++awk=${awk-../a.exe}
+ 
+ rm -f foo
+ awk '
+@@ -17,12 +17,12 @@ $awk '
+ 	print $0 >"foo"
+ 	close("foo")
+ 	print "###", NR, $0
+-	system("../a.out -f foo <\"lilly.ifile\" ")
++	system("../a.exe -f foo <\"lilly.ifile\" ")
+ }' <lilly.progs >foo2 2>&1
+ 
+ echo `cat lilly.progs | wc -l` tests
+ 
+ sed -e 's/awk://' -e 's/Syntax/syntax/' -e '/warning:/d' foo1 >glop1
+-sed 's/..\/a.out://' foo2 >glop2
++sed 's/..\/a.exe://' foo2 >glop2
+ diff glop1 glop2 >lilly.diff || echo 'bad: T.lilly is different'
+ echo
+--- testdir/T.main
++++ testdir/T.main
+@@ -1,6 +1,6 @@
+ echo T.main: misc tests of arguments in main
+ 
+-awk=${awk-../a.out}
++awk=${awk-../a.exe}
+ 
+ rm -f core
+ 
+--- testdir/T.misc
++++ testdir/T.misc
+@@ -2,7 +2,7 @@
+ 
+ echo T.misc: miscellaneous buglets now watched for
+ 
+-awk=${awk-../a.out}
++awk=${awk-../a.exe}
+ 
+ rm -f core
+ 
+--- testdir/T.nextfile
++++ testdir/T.nextfile
+@@ -1,6 +1,6 @@
+ echo T.nextfile: tests of nextfile command
+ 
+-awk=${awk-../a.out}
++awk=${awk-../a.exe}
+ 
+ # 1st lines of some files
+ rm -f foo0
+--- testdir/T.overflow
++++ testdir/T.overflow
+@@ -1,6 +1,6 @@
+ echo T.overflow: test some overflow conditions
+ 
+-awk=${awk-../a.out}
++awk=${awk-../a.exe}
+ 
+ $awk 'BEGIN {
+  	for (i = 0; i < 1000; i++) printf("abcdefghijklmnopqsrtuvwxyz")
+--- testdir/T.re
++++ testdir/T.re
+@@ -3,7 +3,7 @@ echo T.re: tests of regular expression code
+ awk '
+ BEGIN {
+ 	FS = "\t"
+-	awk = "../a.out"
++	awk = "../a.exe"
+ }
+ NF == 0 {
+ 	next
+@@ -31,7 +31,7 @@ NF > 2 {	# generate a test
+ 	# printf(" %3d   %s %s %s:\n", NR, re, op, input)
+ 	# print "test is |" test "|"
+ 	system(test)
+-	# system("bprint -c ../a.out")
++	# system("bprint -c ../a.exe")
+ 	nt++
+ }
+ END { print "	" nt, "tests" }
+--- testdir/T.recache
++++ testdir/T.recache
+@@ -1,7 +1,7 @@
+ echo T.recache: test re cache in b.c
+ 	# thanks to ross ridge for this horror
+ 
+-awk=${awk-../a.out}
++awk=${awk-../a.exe}
+ 
+ echo b >foo1
+ $awk '
+--- testdir/T.redir
++++ testdir/T.redir
+@@ -1,6 +1,6 @@
+ echo T.redir: test redirections
+ 
+-awk=${awk-../a.out}
++awk=${awk-../a.exe}
+ 
+ $awk '{ print >"foo" }' /etc/passwd
+ diff foo /etc/passwd || echo 'BAD: T.redir (print >"foo")'
+--- testdir/T.split
++++ testdir/T.split
+@@ -1,6 +1,6 @@
+ #!/bin/sh
+ 
+-awk=${awk-../a.out}
++awk=${awk-../a.exe}
+ 
+ WORKDIR=$(mktemp -d /tmp/nawktest.XXXXXX)
+ 
+--- testdir/T.sub
++++ testdir/T.sub
+@@ -6,7 +6,7 @@ echo T.sub: tests of sub and gsub code
+ awk '
+ BEGIN {
+ 	FS = "\t"
+-	awk = "../a.out"
++	awk = "../a.exe"
+ }
+ NF == 0		{ next }
+ $1 ~ /^#/	{ next }
+@@ -51,7 +51,7 @@ NF < 5 {	# weird input line
+ 	  "'" '"'"
+ 	# if (nt >= 55) print "test is: " test
+ 	system(test)
+-	# system("bprint -c ../a.out")
++	# system("bprint -c ../a.exe")
+ }
+ END { print nt, "tests" }
+ 
+--- testdir/T.system
++++ testdir/T.system
+@@ -1,6 +1,6 @@
+ echo T.system: test system built-in
+ 
+-awk=${awk-../a.out}
++awk=${awk-../a.exe}
+ 
+ rm -f foo
+ $awk 'BEGIN {
+--- testdir/T.utf
++++ testdir/T.utf
+@@ -2,12 +2,12 @@
+ 
+ echo T.utf: tests of utf functions
+ 
+-awk=${awk-../a.out}
++awk=${awk-../a.exe}
+ 
+ $awk '
+ BEGIN {
+ 	FS = "\t"
+-	awk = "../a.out"
++	awk = "../a.exe"
+ }
+ NF == 0 || $1 ~ /^#/ {
+ 	next
+--- testdir/T.utfre
++++ testdir/T.utfre
+@@ -4,7 +4,7 @@ echo T.utfre: tests of regular expression code for Unicode/utf-8
+ awk '
+ BEGIN {
+ 	FS = "\t"
+-	awk = "../a.out"
++	awk = "../a.exe"
+ }
+ NF == 0 {
+ 	next
+@@ -32,7 +32,7 @@ NF > 2 {	# generate a test
+ 	# printf(" %3d   %s %s %s:\n", NR, re, op, input)
+ 	# print "test is |" test "|"
+ 	system(test)
+-	# system("bprint -c ../a.out")
++	# system("bprint -c ../a.exe")
+ 	nt++
+ }
+ END { print "	" nt, "tests" }
+--- testdir/lilly.out
++++ testdir/lilly.out
+@@ -24,13 +24,13 @@ foo=bar=fribble
+ foo==bar
+ 
+ ### /+=/ {print $0}:
+-../a.out: illegal primary in regular expression += at =
++../a.exe: illegal primary in regular expression += at =
+  source line number 1
+  context is
+ 	 >>> /+=/ <<< 
+ 
+ ### /*=/ {print $0}:
+-../a.out: illegal primary in regular expression *= at =
++../a.exe: illegal primary in regular expression *= at =
+  source line number 1
+  context is
+ 	 >>> /*=/ <<< 
+@@ -39,7 +39,7 @@ foo==bar
+ foo-=bar
+ 
+ ### //=/ {print $0}:
+-../a.out: empty regular expression
++../a.exe: empty regular expression
+  source line number 1
+  context is
+ 	 >>> // <<< 
+@@ -87,13 +87,13 @@ foo=bar=fribble
+ 
+ 
+ ### !/+=/ {print $0}:
+-../a.out: illegal primary in regular expression += at =
++../a.exe: illegal primary in regular expression += at =
+  source line number 1
+  context is
+ 	 >>> !/+=/ <<< 
+ 
+ ### !/*=/ {print $0}:
+-../a.out: illegal primary in regular expression *= at =
++../a.exe: illegal primary in regular expression *= at =
+  source line number 1
+  context is
+ 	 >>> !/*=/ <<< 
+@@ -117,7 +117,7 @@ foo=bar=fribble
+ 
+ 
+ ### !//=/ {print $0}:
+-../a.out: empty regular expression
++../a.exe: empty regular expression
+  source line number 1
+  context is
+ 	 >>> !// <<< 
+@@ -249,13 +249,13 @@ foo=bar=fribble
+ foo==bar
+ 
+ ### $0~/+=/ {print $0}:
+-../a.out: illegal primary in regular expression += at =
++../a.exe: illegal primary in regular expression += at =
+  source line number 1
+  context is
+ 	 >>> $0~/+=/ <<< 
+ 
+ ### $0~/*=/ {print $0}:
+-../a.out: illegal primary in regular expression *= at =
++../a.exe: illegal primary in regular expression *= at =
+  source line number 1
+  context is
+ 	 >>> $0~/*=/ <<< 
+@@ -264,7 +264,7 @@ foo==bar
+ foo-=bar
+ 
+ ### $0~//=/ {print $0}:
+-../a.out: empty regular expression
++../a.exe: empty regular expression
+  source line number 1
+  context is
+ 	 >>> $0~// <<< 
+@@ -312,13 +312,13 @@ foo=bar=fribble
+ 
+ 
+ ### $0!~/+=/ {print $0}:
+-../a.out: illegal primary in regular expression += at =
++../a.exe: illegal primary in regular expression += at =
+  source line number 1
+  context is
+ 	 >>> $0!~/+=/ <<< 
+ 
+ ### $0!~/*=/ {print $0}:
+-../a.out: illegal primary in regular expression *= at =
++../a.exe: illegal primary in regular expression *= at =
+  source line number 1
+  context is
+ 	 >>> $0!~/*=/ <<< 
+@@ -342,7 +342,7 @@ foo=bar=fribble
+ 
+ 
+ ### $0!~//=/ {print $0}:
+-../a.out: empty regular expression
++../a.exe: empty regular expression
+  source line number 1
+  context is
+ 	 >>> $0!~// <<< 
+@@ -489,13 +489,13 @@ foo=bar=fribble
+ foo==bar
+ 
+ ### {if(match($0,/+=/))print $0}:
+-../a.out: illegal primary in regular expression += at =
++../a.exe: illegal primary in regular expression += at =
+  source line number 1
+  context is
+ 	 >>> {if(match($0,/+=/) <<< 
+ 
+ ### {if(match($0,/*=/))print $0}:
+-../a.out: illegal primary in regular expression *= at =
++../a.exe: illegal primary in regular expression *= at =
+  source line number 1
+  context is
+ 	 >>> {if(match($0,/*=/) <<< 
+@@ -504,7 +504,7 @@ foo==bar
+ foo-=bar
+ 
+ ### {if(match($0,//=/))print $0}:
+-../a.out: empty regular expression
++../a.exe: empty regular expression
+  source line number 1
+  context is
+ 	 >>> {if(match($0,//= <<< /))print $0}
+@@ -552,13 +552,13 @@ foo=bar=fribble
+ 
+ 
+ ### {if(!match($0,/+=/))print $0}:
+-../a.out: illegal primary in regular expression += at =
++../a.exe: illegal primary in regular expression += at =
+  source line number 1
+  context is
+ 	 >>> {if(!match($0,/+=/) <<< 
+ 
+ ### {if(!match($0,/*=/))print $0}:
+-../a.out: illegal primary in regular expression *= at =
++../a.exe: illegal primary in regular expression *= at =
+  source line number 1
+  context is
+ 	 >>> {if(!match($0,/*=/) <<< 
+@@ -582,7 +582,7 @@ foo=bar=fribble
+ 
+ 
+ ### {if(!match($0,//=/))print $0}:
+-../a.out: empty regular expression
++../a.exe: empty regular expression
+  source line number 1
+  context is
+ 	 >>> {if(!match($0,//= <<< /))print $0}
+@@ -696,68 +696,68 @@ foo=bar=fribble
+ 
+ 
+ ### {if(index($0,/=/))print $0}:
+-../a.out: index() doesn't permit regular expressions at source line 1
++../a.exe: index() doesn't permit regular expressions at source line 1
+  context is
+ 	 >>> {if(index($0,/=/) <<< 
+ 
+ ### {if(index($0,/=/))print $0}:
+-../a.out: index() doesn't permit regular expressions at source line 1
++../a.exe: index() doesn't permit regular expressions at source line 1
+  context is
+ 	 >>> {if(index($0,/=/) <<< 
+ 
+ ### {if(index($0,/==/))print $0}:
+-../a.out: index() doesn't permit regular expressions at source line 1
++../a.exe: index() doesn't permit regular expressions at source line 1
+  context is
+ 	 >>> {if(index($0,/==/) <<< 
+ 
+ ### {if(index($0,/+=/))print $0}:
+-../a.out: index() doesn't permit regular expressions at source line 1
++../a.exe: index() doesn't permit regular expressions at source line 1
+  context is
+ 	 >>> {if(index($0,/+=/) <<< 
+ 
+ ### {if(index($0,/*=/))print $0}:
+-../a.out: index() doesn't permit regular expressions at source line 1
++../a.exe: index() doesn't permit regular expressions at source line 1
+  context is
+ 	 >>> {if(index($0,/*=/) <<< 
+ 
+ ### {if(index($0,/-=/))print $0}:
+-../a.out: index() doesn't permit regular expressions at source line 1
++../a.exe: index() doesn't permit regular expressions at source line 1
+  context is
+ 	 >>> {if(index($0,/-=/) <<< 
+ 
+ ### {if(index($0,//=/))print $0}:
+-../a.out: empty regular expression
++../a.exe: empty regular expression
+  source line number 1
+  context is
+ 	 >>> {if(index($0,//= <<< /))print $0}
+ 
+ ### {if(index($0,/%=/))print $0}:
+-../a.out: index() doesn't permit regular expressions at source line 1
++../a.exe: index() doesn't permit regular expressions at source line 1
+  context is
+ 	 >>> {if(index($0,/%=/) <<< 
+ 
+ ### {if(index($0,/^=/))print $0}:
+-../a.out: index() doesn't permit regular expressions at source line 1
++../a.exe: index() doesn't permit regular expressions at source line 1
+  context is
+ 	 >>> {if(index($0,/^=/) <<< 
+ 
+ ### {if(index($0,/\/=/))print $0}:
+-../a.out: index() doesn't permit regular expressions at source line 1
++../a.exe: index() doesn't permit regular expressions at source line 1
+  context is
+ 	 >>> {if(index($0,/\/=/) <<< 
+ 
+ ### {if(index($0,/!=/))print $0}:
+-../a.out: index() doesn't permit regular expressions at source line 1
++../a.exe: index() doesn't permit regular expressions at source line 1
+  context is
+ 	 >>> {if(index($0,/!=/) <<< 
+ 
+ ### {if(index($0,/<=/))print $0}:
+-../a.out: index() doesn't permit regular expressions at source line 1
++../a.exe: index() doesn't permit regular expressions at source line 1
+  context is
+ 	 >>> {if(index($0,/<=/) <<< 
+ 
+ ### {if(index($0,/>=/))print $0}:
+-../a.out: index() doesn't permit regular expressions at source line 1
++../a.exe: index() doesn't permit regular expressions at source line 1
+  context is
+ 	 >>> {if(index($0,/>=/) <<< 
+ 
+@@ -819,13 +819,13 @@ foo=bar=fribble
+ 
+ 
+ ### {if(split($0,foo,/+=/))print $0}:
+-../a.out: illegal primary in regular expression += at =
++../a.exe: illegal primary in regular expression += at =
+  source line number 1
+  context is
+ 	 >>> {if(split($0,foo,/+=/) <<< 
+ 
+ ### {if(split($0,foo,/*=/))print $0}:
+-../a.out: illegal primary in regular expression *= at =
++../a.exe: illegal primary in regular expression *= at =
+  source line number 1
+  context is
+ 	 >>> {if(split($0,foo,/*=/) <<< 
+@@ -850,7 +850,7 @@ foo=bar=fribble
+ 
+ 
+ ### {if(split($0,foo,//=/))print $0}:
+-../a.out: empty regular expression
++../a.exe: empty regular expression
+  source line number 1
+  context is
+ 	 >>> {if(split($0,foo,//= <<< /))print $0}
+@@ -1003,13 +1003,13 @@ foo#bar=fribble
+ foo#bar
+ 
+ ### {if(sub(/+=/,"#"))print $0}:
+-../a.out: illegal primary in regular expression += at =
++../a.exe: illegal primary in regular expression += at =
+  source line number 1
+  context is
+ 	 >>> {if(sub(/+=/,"#") <<< 
+ 
+ ### {if(sub(/*=/,"#"))print $0}:
+-../a.out: illegal primary in regular expression *= at =
++../a.exe: illegal primary in regular expression *= at =
+  source line number 1
+  context is
+ 	 >>> {if(sub(/*=/,"#") <<< 
+@@ -1018,7 +1018,7 @@ foo#bar
+ foo#bar
+ 
+ ### {if(sub(//=/,"#"))print $0}:
+-../a.out: empty regular expression
++../a.exe: empty regular expression
+  source line number 1
+  context is
+ 	 >>> {if(sub(//= <<< /,"#"))print $0}
+@@ -1075,13 +1075,13 @@ foo#bar#fribble
+ foo#bar
+ 
+ ### {if(gsub(/+=/,"#"))print $0}:
+-../a.out: illegal primary in regular expression += at =
++../a.exe: illegal primary in regular expression += at =
+  source line number 1
+  context is
+ 	 >>> {if(gsub(/+=/,"#") <<< 
+ 
+ ### {if(gsub(/*=/,"#"))print $0}:
+-../a.out: illegal primary in regular expression *= at =
++../a.exe: illegal primary in regular expression *= at =
+  source line number 1
+  context is
+ 	 >>> {if(gsub(/*=/,"#") <<< 
+@@ -1090,7 +1090,7 @@ foo#bar
+ foo#bar
+ 
+ ### {if(gsub(//=/,"#"))print $0}:
+-../a.out: empty regular expression
++../a.exe: empty regular expression
+  source line number 1
+  context is
+ 	 >>> {if(gsub(//= <<< /,"#"))print $0}
+@@ -1147,13 +1147,13 @@ foo#bar=fribble
+ foo#bar
+ 
+ ### {if(sub(/+=/,"#",$0))print $0}:
+-../a.out: illegal primary in regular expression += at =
++../a.exe: illegal primary in regular expression += at =
+  source line number 1
+  context is
+ 	 >>> {if(sub(/+=/,"#",$0) <<< 
+ 
+ ### {if(sub(/*=/,"#",$0))print $0}:
+-../a.out: illegal primary in regular expression *= at =
++../a.exe: illegal primary in regular expression *= at =
+  source line number 1
+  context is
+ 	 >>> {if(sub(/*=/,"#",$0) <<< 
+@@ -1162,7 +1162,7 @@ foo#bar
+ foo#bar
+ 
+ ### {if(sub(//=/,"#",$0))print $0}:
+-../a.out: empty regular expression
++../a.exe: empty regular expression
+  source line number 1
+  context is
+ 	 >>> {if(sub(//= <<< /,"#",$0))print $0}
+@@ -1219,13 +1219,13 @@ foo#bar#fribble
+ foo#bar
+ 
+ ### {if(gsub(/+=/,"#",$0))print $0}:
+-../a.out: illegal primary in regular expression += at =
++../a.exe: illegal primary in regular expression += at =
+  source line number 1
+  context is
+ 	 >>> {if(gsub(/+=/,"#",$0) <<< 
+ 
+ ### {if(gsub(/*=/,"#",$0))print $0}:
+-../a.out: illegal primary in regular expression *= at =
++../a.exe: illegal primary in regular expression *= at =
+  source line number 1
+  context is
+ 	 >>> {if(gsub(/*=/,"#",$0) <<< 
+@@ -1234,7 +1234,7 @@ foo#bar
+ foo#bar
+ 
+ ### {if(gsub(//=/,"#",$0))print $0}:
+-../a.out: empty regular expression
++../a.exe: empty regular expression
+  source line number 1
+  context is
+ 	 >>> {if(gsub(//= <<< /,"#",$0))print $0}
+--- testdir/try
++++ testdir/try
+@@ -4,7 +4,7 @@ for i in $*
+ do
+ 	echo $i:
+ 	ind <$i
+-	time ../a.out -f $i $td >foo1
++	time ../a.exe -f $i $td >foo1
+ 	time /usr/bin/awk -f $i $td >foo2
+ 	cmp foo1 foo2
+ done
+--- testdir/yc
++++ testdir/yc
+@@ -5,7 +5,7 @@ do
+ 	cd ..
+ 	echo testdir/$i:
+ 	ind <testdir/$i
+-	a.out -f testdir/$i >drek.c
++	a.exe -f testdir/$i >drek.c
+ 	cat drek.c
+ 	make drek || ( echo $i '	' bad compile; echo $i '	' bad compile >/dev/tty; continue )
+ 	cd testdir

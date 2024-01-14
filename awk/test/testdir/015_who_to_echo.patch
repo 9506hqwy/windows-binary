@@ -1,0 +1,31 @@
+--- testdir/T.getline
++++ testdir/T.getline
+@@ -2,7 +2,7 @@ echo T.getline: test getline function
+ 
+ awk=${awk-../a.exe}
+ 
+-who >foo1
++echo "root" >foo1
+ cat foo1 | $awk '
+ BEGIN {
+ 	while (getline)
+@@ -12,7 +12,7 @@ BEGIN {
+ ' >foo
+ diff -b foo1 foo || echo 'BAD: T.getline (bare getline)'
+ 
+-who >foo1
++echo "root" >foo1
+ cat foo1 | $awk '
+ BEGIN {
+ 	while (getline xxx)
+--- testdir/T.split
++++ testdir/T.split
+@@ -112,7 +112,7 @@ de
+ f
+ 
+      ' > $TEMP0
+-who | sed 10q  >> $TEMP0
++echo "root" | sed 10q  >> $TEMP0
+ sed 10q ./passwd >> $TEMP0
+ 
+ $awk '

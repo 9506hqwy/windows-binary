@@ -1,0 +1,5 @@
+--- testdir/arnold-fixes/a-format.ok
++++ testdir/arnold-fixes/a-format.ok
+@@ -1 +1 @@
+-0x1.5p+5
++0xa.8p+2

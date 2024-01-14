@@ -1,0 +1,1003 @@
+--- testdir/Compare.drek
++++ testdir/Compare.drek
+@@ -25,7 +25,7 @@ do
+ 	cat foo2t
+ 	time ../drek $td >foo1 2>foo1t
+ 	cat foo1t
+-	diff -b foo1 foo2 || ( echo $i '	' bad; echo $i '	' bad >/dev/tty; diff foo1 foo2 | sed 20q )
++	diff -b foo1 foo2 || ( echo $i '	' bad; echo $i '	' bad >/dev/tty; diff -b foo1 foo2 | sed 20q )
+ 	echo '>>>' $i
+ 	echo
+ 	echo $i: >>footot
+--- testdir/T.-f-f
++++ testdir/T.-f-f
+@@ -8,12 +8,12 @@ end' >foo
+ echo 'BEGIN { print "begin" }' >foo1
+ echo 'END { print "end" }' >foo2
+ echo xxx | $awk -f foo1 -f foo2 >foo3
+-diff foo foo3 || echo 'BAD: T.-f-f multiple -fs'
++diff -b foo foo3 || echo 'BAD: T.-f-f multiple -fs'
+ 
+ 
+ echo '/a/' | $awk -f - ./passwd >foo1
+ $awk '/a/' ./passwd >foo2
+-diff foo1 foo2 || echo 'BAD: T.-f-f  -f -'
++diff -b foo1 foo2 || echo 'BAD: T.-f-f  -f -'
+ 
+ 
+ cp ./passwd foo1
+@@ -21,7 +21,7 @@ echo '/./ {' >foo2
+ echo 'print' >foo3
+ echo '}' >foo4
+ $awk -f foo2 -f foo3 -f foo4 ./passwd >foo5
+-diff foo1 foo5 || echo 'BAD: T.-f-f 3 files'
++diff -b foo1 foo5 || echo 'BAD: T.-f-f 3 files'
+ 
+ 
+ echo '/./ {' >foo2
+--- testdir/T.argv
++++ testdir/T.argv
+@@ -14,7 +14,7 @@ BEGIN {
+ 	exit
+ }' * >foo1
+ echo * >foo2
+-diff foo1 foo2 || echo 'BAD: T.argv (echo1 *)'
++diff -b foo1 foo2 || echo 'BAD: T.argv (echo1 *)'
+ 
+ $awk '
+ BEGIN {
+@@ -27,7 +27,7 @@ BEGIN {
+ 	exit
+ }' * >foo1
+ echo * >foo2
+-diff foo1 foo2 || echo 'BAD: T.argv (echo2 *)'
++diff -b foo1 foo2 || echo 'BAD: T.argv (echo2 *)'
+ 
+ $awk '
+ BEGIN {
+@@ -44,7 +44,7 @@ a
+ bc
+ def
+ " >foo2
+-diff foo1 foo2 || echo 'BAD: T.argv (argc *)'
++diff -b foo1 foo2 || echo 'BAD: T.argv (argc *)'
+ 
+ echo '1
+ 2
+@@ -53,7 +53,7 @@ echo 'foo1
+ foo2
+ foo3' >foo1
+ $awk '{print L $0}' L=foo <foo0 >foo2
+-diff foo1 foo2 || echo 'BAD: T.argv (L=foo <foo1)'
++diff -b foo1 foo2 || echo 'BAD: T.argv (L=foo <foo1)'
+ 
+ echo '1
+ 2
+@@ -62,7 +62,7 @@ echo 'foo1
+ foo2
+ foo3' >foo1
+ $awk '{print L $0}' L=foo foo0 >foo2
+-diff foo1 foo2 || echo 'BAD: T.argv (L=foo foo1)'
++diff -b foo1 foo2 || echo 'BAD: T.argv (L=foo foo1)'
+ 
+ echo '1
+ 2
+@@ -71,7 +71,7 @@ echo 'foo1
+ foo2
+ foo3' >foo1
+ cat foo0 | $awk '{print L $0}' L=foo - >foo2
+-diff foo1 foo2 || echo 'BAD: T.argv (L=foo -)'
++diff -b foo1 foo2 || echo 'BAD: T.argv (L=foo -)'
+ 
+ echo '1
+ 2
+@@ -83,7 +83,7 @@ glop1
+ glop2
+ glop3' >foo1
+ $awk '{print L $0}' L=foo foo0 L=glop foo0 >foo2
+-diff foo1 foo2 || echo 'BAD: T.argv (L=foo L=glop)'
++diff -b foo1 foo2 || echo 'BAD: T.argv (L=foo L=glop)'
+ 
+ echo '1
+ 2
+@@ -95,21 +95,21 @@ echo '111
+ 222
+ 223' >foo1
+ $awk '{print L $0}' L=11 foo0 L=22 foo0 >foo2
+-diff foo1 foo2 || echo 'BAD: T.argv (L=11 L=22)'
++diff -b foo1 foo2 || echo 'BAD: T.argv (L=11 L=22)'
+ 
+ echo >foo0
+ echo 'name=value
+ name=value' >foo1
+ $awk 'BEGIN { print ARGV[1] } { print ARGV[1] }' name=value foo0 >foo2
+-diff foo1 foo2 || echo 'BAD: T.argv assignment operand modified'
++diff -b foo1 foo2 || echo 'BAD: T.argv assignment operand modified'
+ 
+ echo 3.345 >foo1
+ $awk 'BEGIN { print ARGV[1] + ARGV[2]}' 1 2.345 >foo2
+-diff foo1 foo2 || echo 'BAD: T.argv (ARGV[1] + ARGV[2])'
++diff -b foo1 foo2 || echo 'BAD: T.argv (ARGV[1] + ARGV[2])'
+ 
+ echo 3.345 >foo1
+ x1=1 x2=2.345 $awk 'BEGIN { print ENVIRON["x1"] + ENVIRON["x2"]}' 1 2.345 >foo2
+-diff foo1 foo2 || echo 'BAD: T.argv (ENVIRON[x1] + ENVIRON[x2])'
++diff -b foo1 foo2 || echo 'BAD: T.argv (ENVIRON[x1] + ENVIRON[x2])'
+ 
+ 
+ echo 'foo1' >foo1
+@@ -119,14 +119,14 @@ $awk 'BEGIN { ARGV[2] = "" }
+ 	{ print }' foo1 foo2 foo3 >foo4
+ echo 'foo1
+ foo3' >foo5
+-diff foo4 foo5 || echo 'BAD: T.argv zap ARGV[2]'
++diff -b foo4 foo5 || echo 'BAD: T.argv zap ARGV[2]'
+ 
+ echo hi > foo1 ; mv foo1 foo2
+ $awk 'BEGIN { ARGV[1] = "foo2" ; print FILENAME }
+              { print FILENAME }' foo1 >foo3
+ echo '
+ foo2' >foo4
+-diff foo3 foo4 || echo 'BAD: T.argv startup FILENAME'
++diff -b foo3 foo4 || echo 'BAD: T.argv startup FILENAME'
+ 	# assumes that startup FILENAME is ""
+ 
+ 
+@@ -147,4 +147,4 @@ END {
+         for (i in ARGV)
+                 printf("ARGV[%d] is %s\n", i, ARGV[i])
+ }' >foo2
+-diff foo1 foo2 || echo 'BAD: T.argv delete ARGV[2]'
++diff -b foo1 foo2 || echo 'BAD: T.argv delete ARGV[2]'
+--- testdir/T.arnold
++++ testdir/T.arnold
+@@ -15,5 +15,5 @@ do
+   name=$(basename $i .awk)
+   #echo $name:
+   $awk -f $name.awk >foo.$name
+-  diff $name.ok foo.$name || echo "BAD: T.arnold ($name)"
++  diff -b $name.ok foo.$name || echo "BAD: T.arnold ($name)"
+ done
+--- testdir/T.builtin
++++ testdir/T.builtin
+@@ -4,7 +4,7 @@ awk=${awk-../a.exe}
+ 
+ $awk 'BEGIN { print index(123, substr(123, 2)) }' >foo1
+ echo 2 >foo2
+-diff foo1 foo2 || echo 'BAD: T.builtin (index/substr)'
++diff -b foo1 foo2 || echo 'BAD: T.builtin (index/substr)'
+ 
+ $awk 'BEGIN {
+ 	pi = 2 * atan2(1, 0)
+@@ -12,7 +12,7 @@ $awk 'BEGIN {
+ 		pi, sin(pi), cos(pi/2), exp(log(pi)), log(exp(10)))
+ }' >foo1
+ echo '3.14159 0.000 0.000 3.14159 10.000' >foo2
+-diff foo1 foo2 || echo 'BAD: T.builtin (sin/cos)'
++diff -b foo1 foo2 || echo 'BAD: T.builtin (sin/cos)'
+ 
+ $awk 'BEGIN {
+ 	s = srand(1)	# set a real random start
+@@ -22,22 +22,22 @@ $awk 'BEGIN {
+ 	for (i = 1; i <= 10; i++)
+ 		print rand() >"foo2"
+ }'
+-diff foo1 foo2 || echo 'BAD: T.builtin (rand)'
++diff -b foo1 foo2 || echo 'BAD: T.builtin (rand)'
+ 
+ echo 'hello, WORLD!' |
+ $awk '{ printf("%s|%s|%s\n", tolower($0), toupper($0), $0)}' >foo1
+ echo 'hello, world!|HELLO, WORLD!|hello, WORLD!' >foo2
+-diff foo1 foo2 || echo 'BAD: T.builtin (toupper/tolower)'
++diff -b foo1 foo2 || echo 'BAD: T.builtin (toupper/tolower)'
+ 
+ 
+ if locale -a | grep -qsi de_DE.UTF-8; then
+ 	(export LANG=de_DE.UTF-8 && echo 'DÃ¼rst' |
+ 	$awk '{ printf("%s|%s|%s\n", tolower($0), toupper($0), $0)}') >foo1
+ 	echo 'dÃ¼rst|DÃœRST|DÃ¼rst' >foo2
+-	diff foo1 foo2 || echo 'BAD: T.builtin (toupper/tolower) for utf-8'
++	diff -b foo1 foo2 || echo 'BAD: T.builtin (toupper/tolower) for utf-8'
+ 	(export LC_NUMERIC=de_DE.UTF-8 && $awk 'BEGIN { print 0.01 }' /dev/null) >foo1
+ 	echo "0.01" >foo2
+-	diff foo1 foo2 || echo 'BAD: T.builtin LC_NUMERIC radix (.) handling' 
++	diff -b foo1 foo2 || echo 'BAD: T.builtin LC_NUMERIC radix (.) handling' 
+ fi
+ 
+ $awk 'BEGIN {
+@@ -72,7 +72,7 @@ echo '1
+ 2
+ 3' >foo1
+ $awk '{ n = split($0, x); print length(x) }' <foo0 >foo2
+-diff foo1 foo2 || echo 'BAD: T.builtin length array'
++diff -b foo1 foo2 || echo 'BAD: T.builtin length array'
+ 
+ # Test for backslash handling
+ cat << \EOF >foo0
+@@ -87,4 +87,4 @@ cat << \EOF >foo2
+ AB
+ CD
+ EOF
+-diff foo1 foo2 || echo 'BAD: T.builtin continuation handling (backslash)' 
++diff -b foo1 foo2 || echo 'BAD: T.builtin continuation handling (backslash)' 
+--- testdir/T.chem
++++ testdir/T.chem
+@@ -7,5 +7,5 @@ for i in lsd1.p penicil.p res.p
+ do
+ 	$awk -f chem.awk $i >foo1
+ 	$oldawk -f chem.awk $i >foo2
+-	diff foo1 foo2 || echo "BAD: T.chem on $i"
++	diff -b foo1 foo2 || echo "BAD: T.chem on $i"
+ done
+--- testdir/T.close
++++ testdir/T.close
+@@ -4,33 +4,33 @@ awk=${awk-../a.exe}
+ 
+ rm -f foo
+ $awk '{ print >>"foo"; close("foo") }' ./passwd
+-diff ./passwd foo || echo 'BAD: T.close (1)'
++diff -b ./passwd foo || echo 'BAD: T.close (1)'
+ 
+ ls -l >foo
+ tail -1 foo >foo1
+ $awk '{ print >"foo2"; close("foo2") }' foo
+-diff foo1 foo2 || echo 'BAD: T.close (2)'
++diff -b foo1 foo2 || echo 'BAD: T.close (2)'
+ 
+ echo 0 >foo1
+ $awk '	# non-accessible file
+   BEGIN { getline <"./passwd"; print close("./passwd"); }
+ ' >foo2
+-diff foo1 foo2 || echo 'BAD: T.close (3)'
++diff -b foo1 foo2 || echo 'BAD: T.close (3)'
+ 
+ echo -1 >foo1
+ $awk '	# file not opened
+   BEGIN { print close("glotch"); }
+ ' >foo2
+-diff foo1 foo2 || echo 'BAD: T.close (4)'
++diff -b foo1 foo2 || echo 'BAD: T.close (4)'
+ 
+ echo 0 >foo1
+ $awk '	# normal close
+   BEGIN { print "hello" > "foo"; print close("foo"); }
+ ' >foo2
+-diff foo1 foo2 || echo 'BAD: T.close (5)'
++diff -b foo1 foo2 || echo 'BAD: T.close (5)'
+ 
+ echo 0 >foo1
+ $awk '	# normal close
+   BEGIN { print "hello" | "cat >foo"; print close("cat >foo"); }
+ ' >foo2
+-diff foo1 foo2 || echo 'BAD: T.close (6)'
++diff -b foo1 foo2 || echo 'BAD: T.close (6)'
+--- testdir/T.clv
++++ testdir/T.clv
+@@ -12,7 +12,7 @@ BEGIN { x=0; print x; getline; print x, $0 }
+ ' >foo1
+ echo '0
+ 0 hello' >foo2
+-diff foo1 foo2 || echo 'BAD: T.clv (stdin only)'
++diff -b foo1 foo2 || echo 'BAD: T.clv (stdin only)'
+ 
+ # cmdline asgn then stdin
+ echo 'hello
+@@ -21,7 +21,7 @@ BEGIN { x=0; print x; getline; print x, $0 }
+ ' x=1 >foo1
+ echo '0
+ 1 hello' >foo2
+-diff foo1 foo2 || echo 'BAD: T.clv (x=1 only)'
++diff -b foo1 foo2 || echo 'BAD: T.clv (x=1 only)'
+ 
+ # several cmdline asgn, then stdin
+ echo 'hello
+@@ -30,7 +30,7 @@ BEGIN { x=0; print x; getline; print x, $0 }
+ ' x=1 x=2 x=3 >foo1
+ echo '0
+ 3 hello' >foo2
+-diff foo1 foo2 || echo 'BAD: T.clv (x=3 only)'
++diff -b foo1 foo2 || echo 'BAD: T.clv (x=3 only)'
+ 
+ # several cmdline asgn, then file
+ echo 'hello
+@@ -40,17 +40,17 @@ BEGIN { x=0; print x; getline; print x, $0 }
+ ' x=1 x=2 x=3 foo >foo1
+ echo '0
+ 3 hello' >foo2
+-diff foo1 foo2 || echo 'BAD: T.clv (x=3 only)'
++diff -b foo1 foo2 || echo 'BAD: T.clv (x=3 only)'
+ 
+ # cmdline asgn then file
+ echo 4 >foo1
+ $awk 'BEGIN { getline; print x}' x=4 /dev/null >foo2
+-diff foo1 foo2 || echo 'BAD: T.clv (x=4 /dev/null)'
++diff -b foo1 foo2 || echo 'BAD: T.clv (x=4 /dev/null)'
+ 
+ #cmdline asgn then file but no read of it
+ echo 0 >foo1
+ $awk 'BEGIN { x=0; getline <"/dev/null"; print x}' x=5 /dev/null >foo2
+-diff foo1 foo2 || echo 'BAD: T.clv (x=5 /dev/null)'
++diff -b foo1 foo2 || echo 'BAD: T.clv (x=5 /dev/null)'
+ 
+ #cmdline asgn then file then read
+ echo 'xxx
+@@ -60,21 +60,21 @@ echo '6
+ end' >foo1
+ $awk 'BEGIN { x=0; getline; print x}
+       END { print x }' x=6 foo x=end >foo2
+-diff foo1 foo2 || echo 'BAD: T.clv (x=6 /dev/null)'
++diff -b foo1 foo2 || echo 'BAD: T.clv (x=6 /dev/null)'
+ 
+ #cmdline asgn then file then read
+ echo '0
+ end' >foo1
+ $awk 'BEGIN { x=0; getline <"/dev/null"; print x}
+       END { print x }' x=7 /dev/null x=end >foo2
+-diff foo1 foo2 || echo 'BAD: T.clv (x=7 /dev/null)'
++diff -b foo1 foo2 || echo 'BAD: T.clv (x=7 /dev/null)'
+ 
+ #cmdline asgn then file then read; _ in commandname
+ echo '0
+ end' >foo1
+ $awk 'BEGIN { _=0; getline <"/dev/null"; print _}
+       END { print _ }' _=7A /dev/null _=end >foo2
+-diff foo1 foo2 || echo 'BAD: T.clv (_=7A /dev/null)'
++diff -b foo1 foo2 || echo 'BAD: T.clv (_=7A /dev/null)'
+ 
+ # illegal varname in commandname
+ $awk '{ print }' 99_=foo /dev/null >foo 2>foo2
+@@ -84,71 +84,71 @@ grep "can't open.*foo" foo2 >/dev/null 2>&1 || echo 'BAD: T.clv (7B: illegal var
+ 
+ echo 123 >foo1
+ $awk -v x=123 'BEGIN { print x }' >foo2
+-diff foo1 foo2 || echo 'BAD: T.clv (x=11)'
++diff -b foo1 foo2 || echo 'BAD: T.clv (x=11)'
+ 
+ echo 123 >foo1
+ $awk -vx=123 'BEGIN { print x }' >foo2
+-diff foo1 foo2 || echo 'BAD: T.clv (x=11a)'
++diff -b foo1 foo2 || echo 'BAD: T.clv (x=11a)'
+ 
+ echo 123 abc 10.99 >foo1
+ $awk -v x=123 -v y=abc -v z1=10.99 'BEGIN { print x, y, z1 }' >foo2
+-diff foo1 foo2 || echo 'BAD: T.clv (x=12)'
++diff -b foo1 foo2 || echo 'BAD: T.clv (x=12)'
+ 
+ echo 123 abc 10.99 >foo1
+ $awk -vx=123 -vy=abc -vz1=10.99 'BEGIN { print x, y, z1 }' >foo2
+-diff foo1 foo2 || echo 'BAD: T.clv (x=12a)'
++diff -b foo1 foo2 || echo 'BAD: T.clv (x=12a)'
+ 
+ echo 123 abc 10.99 >foo1
+ $awk -v x=123 -v y=abc -v z1=10.99 -- 'BEGIN { print x, y, z1 }' >foo2
+-diff foo1 foo2 || echo 'BAD: T.clv (x=12a)'
++diff -b foo1 foo2 || echo 'BAD: T.clv (x=12a)'
+ 
+ echo 'BEGIN { print x, y, z1 }' >foo0
+ echo 123 abc 10.99 >foo1
+ $awk -v x=123 -v y=abc -f foo0 -v z1=10.99 >foo2
+-diff foo1 foo2 || echo 'BAD: T.clv (x=13)'
++diff -b foo1 foo2 || echo 'BAD: T.clv (x=13)'
+ 
+ echo 'BEGIN { print x, y, z1 }' >foo0
+ echo 123 abc 10.99 >foo1
+ $awk -vx=123 -vy=abc -f foo0 -vz1=10.99 >foo2
+-diff foo1 foo2 || echo 'BAD: T.clv (x=13a)'
++diff -b foo1 foo2 || echo 'BAD: T.clv (x=13a)'
+ 
+ echo 'BEGIN { print x, y, z1 }' >foo0
+ echo 123 abc 10.99 >foo1
+ $awk -f foo0 -v x=123 -v y=abc -v z1=10.99 >foo2
+-diff foo1 foo2 || echo 'BAD: T.clv (x=14)'
++diff -b foo1 foo2 || echo 'BAD: T.clv (x=14)'
+ 
+ echo 'BEGIN { print x, y, z1 }' >foo0
+ echo 123 abc 10.99 >foo1
+ $awk -f foo0 -vx=123 -vy=abc -vz1=10.99 >foo2
+-diff foo1 foo2 || echo 'BAD: T.clv (x=14a)'
++diff -b foo1 foo2 || echo 'BAD: T.clv (x=14a)'
+ 
+ echo 'BEGIN { print x, y, z1 }
+ END { print x }' >foo0
+ echo '123 abc 10.99
+ 4567' >foo1
+ $awk -f foo0 -v x=123 -v y=abc -v z1=10.99 /dev/null x=4567 /dev/null >foo2
+-diff foo1 foo2 || echo 'BAD: T.clv (x=15)'
++diff -b foo1 foo2 || echo 'BAD: T.clv (x=15)'
+ 
+ echo 'BEGIN { print x, y, z1 }
+ END { print x }' >foo0
+ echo '123 abc 10.99
+ 4567' >foo1
+ $awk -f foo0 -vx=123 -vy=abc -vz1=10.99 /dev/null x=4567 /dev/null >foo2
+-diff foo1 foo2 || echo 'BAD: T.clv (x=15a)'
++diff -b foo1 foo2 || echo 'BAD: T.clv (x=15a)'
+ 
+ echo 'BEGIN { print x, y, z1 }
+ NR==1 { print x }' >foo0
+ echo '123 abc 10.99
+ 4567' >foo1
+ $awk -v x=123 -v y=abc -v z1=10.99 -f foo0 x=4567 ./passwd >foo2
+-diff foo1 foo2 || echo 'BAD: T.clv (x=16)'
++diff -b foo1 foo2 || echo 'BAD: T.clv (x=16)'
+ 
+ echo 'BEGIN { print x, y, z1 }
+ NR==1 { print x }' >foo0
+ echo '123 abc 10.99
+ 4567' >foo1
+ $awk -vx=123 -vy=abc -vz1=10.99 -f foo0 x=4567 ./passwd >foo2
+-diff foo1 foo2 || echo 'BAD: T.clv (x=16a)'
++diff -b foo1 foo2 || echo 'BAD: T.clv (x=16a)'
+ 
+ 
+ 
+@@ -157,17 +157,17 @@ diff foo1 foo2 || echo 'BAD: T.clv (x=16a)'
+ 
+ echo 'a\\b\z' >foo1
+ echo 'hello' | $awk '{print x}' x='\141\\\\\142\\z' >foo2
+-diff foo1 foo2 || echo 'BAD: T.clv (x=17)'
++diff -b foo1 foo2 || echo 'BAD: T.clv (x=17)'
+ 
+ echo "a
+ z" >foo1
+ echo 'hello' | $awk '{print x}' x='a\nz' >foo2
+-diff foo1 foo2 || echo 'BAD: T.clv (x=18)'
++diff -b foo1 foo2 || echo 'BAD: T.clv (x=18)'
+ 
+ # a bit circular here...
+ $awk 'BEGIN { printf("a%c%c%cz\n", "\b", "\r", "\f") }' >foo1 
+ echo 'hello' | $awk '{print x}' x='a\b\r\fz' >foo2
+-diff foo1 foo2 || echo 'BAD: T.clv (x=19)'
++diff -b foo1 foo2 || echo 'BAD: T.clv (x=19)'
+ 
+ 
+ ### newer -v tests
+--- testdir/T.csconcat
++++ testdir/T.csconcat
+@@ -26,4 +26,4 @@ hello world
+ hello world
+ EOF
+ 
+-diff foo1 foo2 || echo 'BAD: T.csconcat (1)'
++diff -b foo1 foo2 || echo 'BAD: T.csconcat (1)'
+--- testdir/T.delete
++++ testdir/T.delete
+@@ -18,4 +18,4 @@ $awk '
+ 	n2 = 0; for (i in x) n2++
+ 	print n, n1, n2
+ }' foo0 >foo1
+-diff foo1 foo2 || echo 'BAD: T.delete (1)'
++diff -b foo1 foo2 || echo 'BAD: T.delete (1)'
+--- testdir/T.func
++++ testdir/T.func
+@@ -22,7 +22,7 @@ echo '1
+ 0
+ 0
+ 1' >foo2
+-diff foo1 foo2 || echo 'BAD: T.func (function return type)'
++diff -b foo1 foo2 || echo 'BAD: T.func (function return type)'
+ 
+ echo 'data: data' >foo1
+ $awk '
+@@ -30,7 +30,7 @@ function test1(array) { array["test"] = "data" }
+ function test2(array) { return(array["test"]) }
+ BEGIN { test1(foo); print "data: " test2(foo) }
+ ' >foo2
+-diff foo1 foo2 || echo 'BAD: T.func (array type)'
++diff -b foo1 foo2 || echo 'BAD: T.func (array type)'
+ 
+ $awk '
+ BEGIN	{ code() }
+@@ -39,7 +39,7 @@ function code() { ; }
+ function codeout(ex) { print ex }
+ ' /dev/null >foo1
+ echo x >foo2
+-diff foo1 foo2 || echo 'BAD: T.func (argument passing)'
++diff -b foo1 foo2 || echo 'BAD: T.func (argument passing)'
+ 
+ $awk '
+ BEGIN { unireghf() }
+@@ -57,7 +57,7 @@ function rcell(cellname,hfeed) {
+ ' >foo1
+ echo "foo
+ bar" >foo2
+-diff foo1 foo2 || echo 'BAD: T.func (convert arg to array)'
++diff -b foo1 foo2 || echo 'BAD: T.func (convert arg to array)'
+ 
+ $awk '
+ function f(n) {
+@@ -91,7 +91,7 @@ cat <<! >foo1
+ 40320
+ 362880
+ !
+-diff foo1 foo2 || echo 'BAD: T.func (factorial)'
++diff -b foo1 foo2 || echo 'BAD: T.func (factorial)'
+ 
+ $awk '
+ function ack(m,n) {
+@@ -117,7 +117,7 @@ cat <<! >foo1
+ 125 (10307 calls)
+ 253 (42438 calls)
+ !
+-diff foo1 foo2 || echo 'BAD: T.func (ackermann)'
++diff -b foo1 foo2 || echo 'BAD: T.func (ackermann)'
+ 
+ $awk '
+ END { print "end" }
+@@ -142,7 +142,7 @@ begin
+ 89
+ end
+ !
+-diff foo1 foo2 || echo 'BAD: T.func (fib)'
++diff -b foo1 foo2 || echo 'BAD: T.func (fib)'
+ 
+ $awk '
+ function foo() {
+@@ -167,12 +167,12 @@ function eprocess(file, first, contig) {
+ function process(file) {
+ 	close(file)
+ }' >foo2
+-diff foo1 foo2 || echo 'BAD: T.func (eqn)'
++diff -b foo1 foo2 || echo 'BAD: T.func (eqn)'
+ 
+ echo 1 >foo1
+ $awk 'function f() { n = 1; exit }
+ 	BEGIN { n = 0; f(); n = 2 }; END { print n}' >foo2
+-diff foo1 foo2 || echo 'BAD: T.func (exit in function)'
++diff -b foo1 foo2 || echo 'BAD: T.func (exit in function)'
+ 
+ echo 1 >foo1
+ $awk '
+@@ -187,10 +187,10 @@ BEGIN {	n = 10
+ 	print (k == n^2)
+       }
+ ' >foo2
+-diff foo1 foo2 || echo 'BAD: T.func (multi-dim subscript)'
++diff -b foo1 foo2 || echo 'BAD: T.func (multi-dim subscript)'
+ 
+ echo '<> 0' >foo1
+ $awk '
+ function foo() { i = 0 }
+         BEGIN { x = foo(); printf "<%s> %d\n", x, x }' >foo2
+-diff foo1 foo2 || echo 'BAD: T.func (fall off end)'
++diff -b foo1 foo2 || echo 'BAD: T.func (fall off end)'
+--- testdir/T.int-expr
++++ testdir/T.int-expr
+@@ -120,5 +120,5 @@ EOF
+ 
+ 
+ $awk -f prog foo.in > foo2
+-diff foo1 foo2 || echo 'BAD: T.int-expr (1)'
++diff -b foo1 foo2 || echo 'BAD: T.int-expr (1)'
+ rm -f prog
+--- testdir/T.latin1
++++ testdir/T.latin1
+@@ -6,25 +6,25 @@ $awk '
+ { print $0 }
+ ' latin1 >foo1
+ 
+-diff latin1 foo1 || echo 'BAD: T.latin1 1'
++diff -b latin1 foo1 || echo 'BAD: T.latin1 1'
+ 
+ $awk '{ gsub(/\351/, "\370"); print }' latin1 >foo0
+ $awk '{ gsub(/é/, "ø"); print }' latin1 >foo1
+-diff foo0 foo1 || echo 'BAD: T.latin1 3'
++diff -b foo0 foo1 || echo 'BAD: T.latin1 3'
+ 
+ $awk '{ gsub(/[^\300-\370]/, ""); print }' latin1 >foo0
+ $awk '{ gsub(/[^À-ø]/, ""); print } ' latin1 >foo1
+-diff foo0 foo1 || echo 'BAD: T.latin1 4'
++diff -b foo0 foo1 || echo 'BAD: T.latin1 4'
+ 
+ echo  '/á/' >foo1
+ $awk -f foo1 foo1 >foo2
+ 
+-diff foo1 foo2 || echo 'BAD: T.latin1 5'
++diff -b foo1 foo2 || echo 'BAD: T.latin1 5'
+ 
+ 
+ echo /[áé]/ >foo1
+ $awk -f foo1 foo1 >foo2
+-diff foo1 foo2 || echo 'BAD: T.latin1 6'
++diff -b foo1 foo2 || echo 'BAD: T.latin1 6'
+ 
+ 
+ echo 'This is a line.
+@@ -34,4 +34,4 @@ This is another line.' >foo0
+ echo 'Patterns like /[áé]/ do not work yet. Example, run awk /[áé]/
+ over a file containing just á.' >foo1
+ $awk '/[áé]/' foo0 >foo2
+-diff foo1 foo2 || echo 'BAD: T.latin1 7'
++diff -b foo1 foo2 || echo 'BAD: T.latin1 7'
+--- testdir/T.lilly
++++ testdir/T.lilly
+@@ -24,5 +24,5 @@ echo `cat lilly.progs | wc -l` tests
+ 
+ sed -e 's/awk://' -e 's/Syntax/syntax/' -e '/warning:/d' foo1 >glop1
+ sed 's/..\/a.exe://' foo2 >glop2
+-diff glop1 glop2 >lilly.diff || echo 'bad: T.lilly is different'
++diff -b glop1 glop2 >lilly.diff || echo 'bad: T.lilly is different'
+ echo
+--- testdir/T.main
++++ testdir/T.main
+@@ -14,19 +14,19 @@ if test -r core; then echo 1>&2 "BAD: T.main awk -d dropped core"; fi
+ echo 'a::b::c' >foo
+ $awk -F:: '{print NF}' foo >foo1
+ echo '3' >foo2
+-diff foo1 foo2 || echo 'bad: awk -F::'
++diff -b foo1 foo2 || echo 'bad: awk -F::'
+ 
+ echo 'a::b::c' >foo
+ $awk -F :: '{print NF}' foo >foo1
+ echo '3' >foo2
+-diff foo1 foo2 || echo 'bad: awk -F ::'
++diff -b foo1 foo2 || echo 'bad: awk -F ::'
+ 
+ echo 'a	b	c' >foo
+ $awk -F t '{print NF}' foo >foo1
+ echo '3' >foo2
+-diff foo1 foo2 || echo 'bad: awk -F (tab)'
++diff -b foo1 foo2 || echo 'bad: awk -F (tab)'
+ 
+ echo 'atabbtabc' >foo
+ $awk -F tab '{print NF}' foo >foo1
+ echo '3' >foo2
+-diff foo1 foo2 || echo 'bad: awk -F tab'
++diff -b foo1 foo2 || echo 'bad: awk -F tab'
+--- testdir/T.misc
++++ testdir/T.misc
+@@ -53,16 +53,16 @@ echo 'a
+ s p
+ x' >foo1
+ $awk '{ NF -= 2; $1 = $1; print }' <foo >foo2
+-diff foo1 foo2 || echo 1>&2 "BAD: T.misc bad field self-assignment"
++diff -b foo1 foo2 || echo 1>&2 "BAD: T.misc bad field self-assignment"
+ 
+ echo '1
+ 1' >foo1
+ $awk 'BEGIN {x = 1; print x; x = x; print x}' >foo2
+-diff foo1 foo2 || echo 1>&2 "BAD: T.misc bad self-assignment"
++diff -b foo1 foo2 || echo 1>&2 "BAD: T.misc bad self-assignment"
+ 
+ echo 573109312 | $awk '{print $1*4}' >foo1
+ echo 2292437248 >foo2
+-diff foo1 foo2 || echo 1>&2 "BAD: T.misc bad overflow"
++diff -b foo1 foo2 || echo 1>&2 "BAD: T.misc bad overflow"
+ 
+ # note that there are 8-bit characters in the echo
+ # some shells will probably screw this up.
+@@ -71,7 +71,7 @@ code Â€ 1
+ code Â€ 2' |
+ $awk '/^#/' >foo1
+ echo '#' >foo2
+-diff foo1 foo2 || echo 1>&2 "BAD: T.misc bad match of 8-bit char"
++diff -b foo1 foo2 || echo 1>&2 "BAD: T.misc bad match of 8-bit char"
+ 
+ echo hello |
+ $awk 'BEGIN	{ FILENAME = "./passwd" }
+@@ -191,7 +191,7 @@ echo a | $awk 1 RS='a\n' > foo1
+ cat << \EOF > foo2
+ 
+ EOF
+-diff foo1 foo2 || echo 'BAD: T.misc RS regex matching an empty record at EOF fails'
++diff -b foo1 foo2 || echo 'BAD: T.misc RS regex matching an empty record at EOF fails'
+ 
+ # Test for RS regex being reapplied
+ echo aaa1a2a | $awk 1 RS='^a' >foo1
+@@ -200,7 +200,7 @@ cat << \EOF > foo2
+ aa1a2a
+ 
+ EOF
+-diff foo1 foo2 || echo 'BAD: T.misc ^regex reapplied fails'
++diff -b foo1 foo2 || echo 'BAD: T.misc ^regex reapplied fails'
+ 
+ # ^-anchored RS matching should be active at the start of each input file
+ tee foo1 foo2 >foo3 << \EOF
+@@ -218,7 +218,7 @@ aa
+ aa
+ 
+ EOF
+-diff foo4 foo5 || echo 'BAD: T.misc ^RS matches the start of every input file fails'
++diff -b foo4 foo5 || echo 'BAD: T.misc ^RS matches the start of every input file fails'
+ 
+ # The following should not produce a warning about changing a constant
+ # nor about a curdled tempcell list
+@@ -234,14 +234,14 @@ grep '^' foo && echo 'BAD: test tempcell list fails'
+ $awk 'BEGIN { print 9, a=10, 11; print a; exit }' >foo1
+ echo '9 10 11
+ 10' >foo2
+-diff foo1 foo2 || echo 'BAD: T.misc (embedded expression)'
++diff -b foo1 foo2 || echo 'BAD: T.misc (embedded expression)'
+ 
+ echo "abc defgh ijkl" | $awk '
+   { $1 = ""; line = $0; print line; print $0; $0 = line; print $0 }' >foo1
+ echo " defgh ijkl
+  defgh ijkl
+  defgh ijkl" >foo2
+-diff foo1 foo2 || echo 'BAD: T.misc (assignment to $0)'
++diff -b foo1 foo2 || echo 'BAD: T.misc (assignment to $0)'
+ 
+ $awk '
+ function min(a, b)
+--- testdir/T.nextfile
++++ testdir/T.nextfile
+@@ -13,7 +13,7 @@ $awk '
+ { print $0; nextfile }	# print first line, quit
+ ' T.* >foo1
+ 
+-diff foo0 foo1 || echo 'BAD: T.nextfile 1'
++diff -b foo0 foo1 || echo 'BAD: T.nextfile 1'
+ 
+ $awk '	# same test but in a for loop
+ { print $0; 
+@@ -24,7 +24,7 @@ $awk '	# same test but in a for loop
+ }	# print first line, quit
+ ' T.* >foo1
+ 
+-diff foo0 foo1 || echo 'BAD: T.nextfile 1f'
++diff -b foo0 foo1 || echo 'BAD: T.nextfile 1f'
+ 
+ $awk '	# same test but in a while loop
+ { print $0; 
+@@ -36,7 +36,7 @@ $awk '	# same test but in a while loop
+ }	# print first line, quit
+ ' T.* >foo1
+ 
+-diff foo0 foo1 || echo 'BAD: T.nextfile 1w'
++diff -b foo0 foo1 || echo 'BAD: T.nextfile 1w'
+ 
+ $awk '	# same test but in a do loop
+ { print $0; 
+@@ -49,7 +49,7 @@ $awk '	# same test but in a do loop
+ }
+ ' T.* >foo1
+ 
+-diff foo0 foo1 || echo 'BAD: T.nextfile 1d'
++diff -b foo0 foo1 || echo 'BAD: T.nextfile 1d'
+ 
+ 
+ # 100 lines of some files
+@@ -64,13 +64,13 @@ $awk '
+ FNR == 100 { nextfile }	# print first line, quit
+ ' T.* >foo1
+ 
+-diff foo0 foo1 || echo 'BAD: T.nextfile 2'
++diff -b foo0 foo1 || echo 'BAD: T.nextfile 2'
+ 
+ 
+ >foo0	# empty
+ $awk ' { nextfile; print $0 }' T.* >foo1
+ 
+-diff foo0 foo1 || echo 'BAD: T.nextfile 3'
++diff -b foo0 foo1 || echo 'BAD: T.nextfile 3'
+ 
+ # skip weird args
+ rm -f foo0
+@@ -83,4 +83,4 @@ $awk '
+ { print $0; nextfile }	# print first line, quit
+ ' T.* >foo1
+ 
+-diff foo0 foo1 || echo 'BAD: T.nextfile 4'
++diff -b foo0 foo1 || echo 'BAD: T.nextfile 4'
+--- testdir/T.recache
++++ testdir/T.recache
+@@ -30,4 +30,4 @@ BEGIN {
+         print x
+ }
+ ' >foo2
+-diff foo1 foo2 || echo 'BAD: T.recache'
++diff -b foo1 foo2 || echo 'BAD: T.recache'
+--- testdir/T.redir
++++ testdir/T.redir
+@@ -3,20 +3,20 @@ echo T.redir: test redirections
+ awk=${awk-../a.exe}
+ 
+ $awk '{ print >"foo" }' ./passwd
+-diff foo ./passwd || echo 'BAD: T.redir (print >"foo")'
++diff -b foo ./passwd || echo 'BAD: T.redir (print >"foo")'
+ 
+ rm -f foo
+ $awk '{ print >>"foo" }' ./passwd
+-diff foo ./passwd || echo 'BAD: T.redir (print >>"foo")'
++diff -b foo ./passwd || echo 'BAD: T.redir (print >>"foo")'
+ 
+ rm -f foo
+ $awk 'NR%2 == 1 { print >>"foo" }
+       NR%2 == 0 { print >"foo" }' ./passwd
+-diff foo ./passwd || echo 'BAD: T.redir (print > and >>"foo")'
++diff -b foo ./passwd || echo 'BAD: T.redir (print > and >>"foo")'
+ 
+ rm -f foo
+ $awk '{ print | "cat >foo" }' ./passwd
+-diff foo ./passwd || echo 'BAD: T.redir (print | "cat >foo")'
++diff -b foo ./passwd || echo 'BAD: T.redir (print | "cat >foo")'
+ 
+ # tests flush of stdout before opening pipe
+ echo '   head
+@@ -25,14 +25,14 @@ echo '   head
+ $awk 'BEGIN { print "   head"
+ 	for (i = 1; i < 3; i++)
+ 		print i | "sort" }' >foo2
+-diff foo1 foo2 || echo 'BAD: T.redir (buffering)'
++diff -b foo1 foo2 || echo 'BAD: T.redir (buffering)'
+ 
+ rm -f foo[12]
+ $awk '{ print >"/dev/stderr" }' ./passwd 1>foo1 2>foo2
+-diff foo2 ./passwd || echo 'BAD: T.redir (print >"/dev/stderr")'
+-diff foo1 /dev/null  || echo 'BAD: T.redir (print >"/dev/stderr")'
++diff -b foo2 ./passwd || echo 'BAD: T.redir (print >"/dev/stderr")'
++diff -b foo1 /dev/null  || echo 'BAD: T.redir (print >"/dev/stderr")'
+ 
+ rm -f foo[12]
+ $awk '{ print >"/dev/stdout" }' ./passwd 1>foo1 2>foo2
+-diff foo1 ./passwd || echo 'BAD: T.redir (print >"/dev/stdout")'
+-diff foo2 /dev/null  || echo 'BAD: T.redir (print >"/dev/stderr")'
++diff -b foo1 ./passwd || echo 'BAD: T.redir (print >"/dev/stdout")'
++diff -b foo2 /dev/null  || echo 'BAD: T.redir (print >"/dev/stderr")'
+--- testdir/T.split
++++ testdir/T.split
+@@ -32,7 +32,7 @@ $awk 'BEGIN {
+ }' > $TEMP1
+ echo '- a 3
+ 3 1 4' > $TEMP2
+-diff $TEMP1 $TEMP2 || fail 'BAD: T.split 0.1'
++diff -b $TEMP1 $TEMP2 || fail 'BAD: T.split 0.1'
+ 
+ $awk 'BEGIN {
+ 	# FS changes after getline.
+@@ -42,7 +42,7 @@ $awk 'BEGIN {
+ 	print FS, $1, NF
+ }' > $TEMP1
+ echo '- a 3' > $TEMP2
+-diff $TEMP1 $TEMP2 || fail 'BAD: T.split 0.2'
++diff -b $TEMP1 $TEMP2 || fail 'BAD: T.split 0.2'
+ 
+ echo '
+ a
+@@ -59,7 +59,7 @@ echo '0
+ 2
+ 3
+ 4' > $TEMP2
+-diff $TEMP1 $TEMP2 || fail 'BAD: T.split 0.3'
++diff -b $TEMP1 $TEMP2 || fail 'BAD: T.split 0.3'
+ 
+ # getline var shouldn't impact fields.
+ 
+@@ -70,7 +70,7 @@ $awk '{
+ 	print $1
+ }' $TEMP0 > $TEMP1
+ echo 'f' > $TEMP2
+-diff $TEMP1 $TEMP2 || fail 'BAD: T.split 0.4'
++diff -b $TEMP1 $TEMP2 || fail 'BAD: T.split 0.4'
+ 
+ echo 'a b c d
+ foo
+@@ -84,7 +84,7 @@ $awk '{
+ }' $TEMP0 > $TEMP1
+ echo 'b 4
+ f 5' > $TEMP2
+-diff $TEMP1 $TEMP2 || fail 'BAD: T.split 0.5'
++diff -b $TEMP1 $TEMP2 || fail 'BAD: T.split 0.5'
+ 
+ echo 'a.b.c=d.e.f
+ g.h.i=j.k.l
+@@ -93,7 +93,7 @@ echo 'b
+ h
+ n' > $TEMP1
+ $awk 'BEGIN { FS="=" } { FS="."; $0=$1; print $2; FS="="; }' $TEMP0 > $TEMP2
+-diff $TEMP1 $TEMP2 || fail 'BAD: T.split (record assignment 1)'
++diff -b $TEMP1 $TEMP2 || fail 'BAD: T.split (record assignment 1)'
+ 
+ echo 'a.b.c=d.e.f
+ g.h.i=j.k.l
+@@ -105,7 +105,7 @@ h
+ p.q.r
+ n' > $TEMP1
+ $awk 'BEGIN { FS="=" } { print $2; FS="."; $0=$1; print $2; FS="="; }' $TEMP0 > $TEMP2
+-diff $TEMP1 $TEMP2 || fail 'BAD: T.split (record assignment 2)'
++diff -b $TEMP1 $TEMP2 || fail 'BAD: T.split (record assignment 2)'
+ 
+ echo 'abc
+ de
+@@ -126,7 +126,7 @@ $awk '
+ 	print s
+ }' $TEMP0 > $TEMP1
+ 
+-diff $TEMP0 $TEMP1 || fail 'BAD: T.split 1'
++diff -b $TEMP0 $TEMP1 || fail 'BAD: T.split 1'
+ 
+ # assumes same test.temp.0!  bad design
+ 
+@@ -142,7 +142,7 @@ $awk '
+ 	print s
+ }' $TEMP0 > $TEMP1
+ 
+-diff $TEMP0 $TEMP1 || fail 'BAD: T.split //'
++diff -b $TEMP0 $TEMP1 || fail 'BAD: T.split //'
+ 
+ $awk '
+ BEGIN { FS = "" }
+@@ -156,7 +156,7 @@ BEGIN { FS = "" }
+ 	print s
+ }' $TEMP0 > $TEMP2
+ 
+-diff $TEMP0 $TEMP2 || fail 'BAD: T.split 2'
++diff -b $TEMP0 $TEMP2 || fail 'BAD: T.split 2'
+ 
+ # assumes same test.temp.0!
+ 
+@@ -172,7 +172,7 @@ BEGIN { FS = "" }
+ 	print s
+ }' $TEMP0 > $TEMP2
+ 
+-diff $TEMP0 $TEMP2 || fail 'BAD: T.split 3'
++diff -b $TEMP0 $TEMP2 || fail 'BAD: T.split 3'
+ 
+ 
+ $awk '
+@@ -186,7 +186,7 @@ XXX
+ echo '2
+ 2
+ 2' > $TEMP2
+-diff $TEMP1 $TEMP2 || fail 'BAD: T.split 4'
++diff -b $TEMP1 $TEMP2 || fail 'BAD: T.split 4'
+ 
+ rm -f $WORKDIR/test.temp*
+ 
+@@ -201,7 +201,7 @@ echo '0
+ 1
+ 2
+ 3' > $TEMP2
+-diff $TEMP1 $TEMP2 || fail 'BAD: T.split null 3rd arg'
++diff -b $TEMP1 $TEMP2 || fail 'BAD: T.split null 3rd arg'
+ 
+ rm -f $WORKDIR/test.temp*
+ $awk 'BEGIN {
+@@ -210,7 +210,7 @@ $awk 'BEGIN {
+ }' > $TEMP1
+ 
+ echo '2 a b' > $TEMP2
+-diff $TEMP1 $TEMP2 || fail 'BAD: T.split(a[1],a)'
++diff -b $TEMP1 $TEMP2 || fail 'BAD: T.split(a[1],a)'
+ 
+ $awk 'BEGIN {
+   a = "cat\n\n\ndog"
+@@ -218,7 +218,7 @@ $awk 'BEGIN {
+   print b[1], b[2]
+ }' > $TEMP1
+ echo 'cat dog' > $TEMP2
+-diff $TEMP1 $TEMP2 || fail 'BAD: T.split(a, b, "[\r\n]+")'
++diff -b $TEMP1 $TEMP2 || fail 'BAD: T.split(a, b, "[\r\n]+")'
+ 
+ rm -rf $WORKDIR
+ 
+--- testdir/T.system
++++ testdir/T.system
+@@ -12,4 +12,4 @@ $awk 'BEGIN {
+ echo $? >>foo
+ echo "3
+ 4" >foo1
+-diff foo foo1 || echo 'BAD: T.system (1)'
++diff -b foo foo1 || echo 'BAD: T.system (1)'
+--- testdir/T.utf
++++ testdir/T.utf
+@@ -34,7 +34,7 @@ $1 ~ /try/ {	# new test
+ 			output = sprintf(".\\echo.exe \"%s\" >foo2", $NF)
+ 		gsub(/\\t/, "\t", output)
+ 		gsub(/\\n/, "\n", output)
+-		run = sprintf("diff foo1 foo2 || echo test %d.%d failed",
++		run = sprintf("diff -b foo1 foo2 || echo test %d.%d failed",
+ 			nt, ++nt2)
+ 		# print  "input is", input
+ 		# print  "test is", test
+--- testdir/yc
++++ testdir/yc
+@@ -11,7 +11,7 @@ do
+ 	cd testdir
+ 	time awk -f $i test.data >foo1
+ 	time ../drek test.data >foo2
+-	diff -b foo1 foo2 || ( echo $i '	' bad; echo $i '	' bad >/dev/tty; diff foo1 foo2 )
++	diff -b foo1 foo2 || ( echo $i '	' bad; echo $i '	' bad >/dev/tty; diff -b foo1 foo2 )
+ 	echo '>>>' $i
+ 	echo
+ done

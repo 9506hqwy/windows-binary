@@ -1,0 +1,313 @@
+--- testdir/T.-f-f
++++ testdir/T.-f-f
+@@ -11,16 +11,16 @@ echo xxx | $awk -f foo1 -f foo2 >foo3
+ diff foo foo3 || echo 'BAD: T.-f-f multiple -fs'
+ 
+ 
+-echo '/a/' | $awk -f - /etc/passwd >foo1
+-$awk '/a/' /etc/passwd >foo2
++echo '/a/' | $awk -f - ./passwd >foo1
++$awk '/a/' ./passwd >foo2
+ diff foo1 foo2 || echo 'BAD: T.-f-f  -f -'
+ 
+ 
+-cp /etc/passwd foo1
++cp ./passwd foo1
+ echo '/./ {' >foo2
+ echo 'print' >foo3
+ echo '}' >foo4
+-$awk -f foo2 -f foo3 -f foo4 /etc/passwd >foo5
++$awk -f foo2 -f foo3 -f foo4 ./passwd >foo5
+ diff foo1 foo5 || echo 'BAD: T.-f-f 3 files'
+ 
+ 
+@@ -31,5 +31,5 @@ echo '
+ 
+ 
+ ]' >foo4
+-$awk -f foo2 -f foo3 -f foo4 /etc/passwd >foo5 2>foo6
++$awk -f foo2 -f foo3 -f foo4 ./passwd >foo5 2>foo6
+ grep 'syntax error.*file foo4' foo6 >/dev/null 2>&1 || echo 'BAD: T.-f-f source file name'
+--- testdir/T.close
++++ testdir/T.close
+@@ -3,8 +3,8 @@ echo T.close: test close built-in
+ awk=${awk-../a.exe}
+ 
+ rm -f foo
+-$awk '{ print >>"foo"; close("foo") }' /etc/passwd
+-diff /etc/passwd foo || echo 'BAD: T.close (1)'
++$awk '{ print >>"foo"; close("foo") }' ./passwd
++diff ./passwd foo || echo 'BAD: T.close (1)'
+ 
+ ls -l >foo
+ tail -1 foo >foo1
+@@ -13,7 +13,7 @@ diff foo1 foo2 || echo 'BAD: T.close (2)'
+ 
+ echo 0 >foo1
+ $awk '	# non-accessible file
+-  BEGIN { getline <"/etc/passwd"; print close("/etc/passwd"); }
++  BEGIN { getline <"./passwd"; print close("./passwd"); }
+ ' >foo2
+ diff foo1 foo2 || echo 'BAD: T.close (3)'
+ 
+--- testdir/T.clv
++++ testdir/T.clv
+@@ -140,14 +140,14 @@ echo 'BEGIN { print x, y, z1 }
+ NR==1 { print x }' >foo0
+ echo '123 abc 10.99
+ 4567' >foo1
+-$awk -v x=123 -v y=abc -v z1=10.99 -f foo0 x=4567 /etc/passwd >foo2
++$awk -v x=123 -v y=abc -v z1=10.99 -f foo0 x=4567 ./passwd >foo2
+ diff foo1 foo2 || echo 'BAD: T.clv (x=16)'
+ 
+ echo 'BEGIN { print x, y, z1 }
+ NR==1 { print x }' >foo0
+ echo '123 abc 10.99
+ 4567' >foo1
+-$awk -vx=123 -vy=abc -vz1=10.99 -f foo0 x=4567 /etc/passwd >foo2
++$awk -vx=123 -vy=abc -vz1=10.99 -f foo0 x=4567 ./passwd >foo2
+ diff foo1 foo2 || echo 'BAD: T.clv (x=16a)'
+ 
+ 
+--- testdir/T.getline
++++ testdir/T.getline
+@@ -24,21 +24,21 @@ diff -b foo1 foo || echo 'BAD: T.getline (getline xxx)'
+ 
+ $awk '
+ BEGIN {
+-	while (getline <"/etc/passwd")
++	while (getline <"./passwd")
+ 		print
+ 	exit
+ }
+ ' >foo
+-diff -b /etc/passwd foo || echo 'BAD: T.getline (getline <file)'
++diff -b ./passwd foo || echo 'BAD: T.getline (getline <file)'
+ 
+-cat /etc/passwd | $awk '
++cat ./passwd | $awk '
+ BEGIN {
+ 	while (getline <"-")	# stdin
+ 		print
+ 	exit
+ }
+ ' >foo
+-diff -b /etc/passwd foo || echo 'BAD: T.getline (getline <"-")'
++diff -b ./passwd foo || echo 'BAD: T.getline (getline <"-")'
+ 
+ $awk '
+ BEGIN {
+@@ -46,8 +46,8 @@ BEGIN {
+ 		print
+ 	exit
+ }
+-' /etc/passwd >foo
+-diff -b /etc/passwd foo || echo 'BAD: T.getline (getline <arg)'
++' ./passwd >foo
++diff -b ./passwd foo || echo 'BAD: T.getline (getline <arg)'
+ 
+ $awk '
+ BEGIN {
+@@ -55,8 +55,8 @@ BEGIN {
+ 		print x
+ 	exit
+ }
+-' /etc/passwd >foo
+-diff -b /etc/passwd foo || echo 'BAD: T.getline (getline x <arg)'
++' ./passwd >foo
++diff -b ./passwd foo || echo 'BAD: T.getline (getline x <arg)'
+ 
+ $awk '
+ BEGIN {
+@@ -64,8 +64,8 @@ BEGIN {
+ 		print
+ 	exit
+ }
+-' /etc/passwd >foo
+-diff -b /etc/passwd foo || echo 'BAD: T.getline (cat arg | getline)'
++' ./passwd >foo
++diff -b ./passwd foo || echo 'BAD: T.getline (cat arg | getline)'
+ 
+ $awk '
+ BEGIN {
+@@ -73,8 +73,8 @@ BEGIN {
+ 		print x
+ 	exit
+ }
+-' /etc/passwd >foo
+-diff -b /etc/passwd foo || echo 'BAD: T.getline (cat arg | getline x)'
++' ./passwd >foo
++diff -b ./passwd foo || echo 'BAD: T.getline (cat arg | getline x)'
+ 
+ $awk ' BEGIN { print getline <"/glop/glop/glop" } ' >foo
+ echo '-1' >foo1
+--- testdir/T.misc
++++ testdir/T.misc
+@@ -74,9 +74,9 @@ echo '#' >foo2
+ diff foo1 foo2 || echo 1>&2 "BAD: T.misc bad match of 8-bit char"
+ 
+ echo hello |
+-$awk 'BEGIN	{ FILENAME = "/etc/passwd" }
++$awk 'BEGIN	{ FILENAME = "./passwd" }
+ 	{ print $0 }' >/dev/null
+-if test -r core; then echo 1>&2 "BAD: T.misc /etc/passwd dropped core"; fi
++if test -r core; then echo 1>&2 "BAD: T.misc ./passwd dropped core"; fi
+ 
+ echo hello |
+ $awk '  function foo(foo) {
+@@ -335,12 +335,12 @@ diff -b foo1 foo2 || echo 'BAD: T.misc BEGIN exit'
+ 
+ echo 1 >foo1
+ $awk '	{ exit }
+-	END { print NR }' /etc/passwd >foo2
++	END { print NR }' ./passwd >foo2
+ diff -b foo1 foo2 || echo 'BAD: T.misc immmediate exit'
+ 
+ echo 1 >foo1
+ $awk '	{i = 1; while (i <= NF) {if (i == NF) exit; i++ } }
+-	END { print NR }' /etc/passwd >foo2
++	END { print NR }' ./passwd >foo2
+ diff -b foo1 foo2 || echo 'BAD: T.misc immmediate exit 2'
+ 
+ echo 1 >foo1
+@@ -348,7 +348,7 @@ $awk '	function f() {
+ 		i = 1; while (i <= NF) {if (i == NF) return NR; i++ }
+ 	}
+ 	{ if (f() == 1) exit }
+-	END { print NR }' /etc/passwd >foo2
++	END { print NR }' ./passwd >foo2
+ diff -b foo1 foo2 || echo 'BAD: T.misc while return'
+ 
+ echo 1 >foo1
+@@ -357,12 +357,12 @@ $awk '	function f() {
+ 		for (i in arr) {if (i == 3) return NR; i++ }
+ 	}
+ 	{ if (f() == 1) exit }
+-	END { print NR }' /etc/passwd >foo2
++	END { print NR }' ./passwd >foo2
+ diff -b foo1 foo2 || echo 'BAD: T.misc while return'
+ 
+ echo 1 >foo1
+ $awk '	{i = 1; do { if (i == NF) exit; i++ } while (i <= NF) }
+-	END { print NR }' /etc/passwd >foo2
++	END { print NR }' ./passwd >foo2
+ diff -b foo1 foo2 || echo 'BAD: T.misc immmediate exit 3'
+ 
+ echo 1 >foo1
+@@ -370,12 +370,12 @@ $awk '	function f() {
+ 		i = 1; do { if (i == NF) return NR; i++ } while (i <= NF)
+ 	}
+ 	{ if (f() == 1) exit }
+-	END { print NR }' /etc/passwd >foo2
++	END { print NR }' ./passwd >foo2
+ diff -b foo1 foo2 || echo 'BAD: T.misc do return'
+ 
+ echo 1 >foo1
+ $awk '	{i = 1; do { if (i == NF) break; i++ } while (i <= NF); exit }
+-	END { print NR }' /etc/passwd >foo2
++	END { print NR }' ./passwd >foo2
+ diff -b foo1 foo2 || echo 'BAD: T.misc immmediate exit 4'
+ 
+ echo 1 >foo1
+@@ -383,7 +383,7 @@ $awk '	{ n = split($0, x)
+ 	  for (i in x) {
+ 	 	if (i == 1)
+ 			exit } }
+-	END { print NR }' /etc/passwd >foo2
++	END { print NR }' ./passwd >foo2
+ diff -b foo1 foo2 || echo 'BAD: T.misc immmediate exit 5'
+ 
+ echo XXXXXXXX >foo1
+@@ -391,7 +391,7 @@ $awk 'BEGIN { s = "ab\fc\rd\be"
+ 	t = s; 	gsub("[" s "]", "X", t); print t }' >foo2
+ diff -b foo1 foo2 || echo 'BAD: T.misc weird escapes in char class'
+ 
+-$awk '{}' /etc/passwd glop/glop >foo 2>foo2
++$awk '{}' ./passwd glop/glop >foo 2>foo2
+ grep "can't open.*glop" foo2 >/dev/null || echo "BAD: T.misc can't open"
+ 
+ echo '
+--- testdir/T.redir
++++ testdir/T.redir
+@@ -2,21 +2,21 @@ echo T.redir: test redirections
+ 
+ awk=${awk-../a.exe}
+ 
+-$awk '{ print >"foo" }' /etc/passwd
+-diff foo /etc/passwd || echo 'BAD: T.redir (print >"foo")'
++$awk '{ print >"foo" }' ./passwd
++diff foo ./passwd || echo 'BAD: T.redir (print >"foo")'
+ 
+ rm -f foo
+-$awk '{ print >>"foo" }' /etc/passwd
+-diff foo /etc/passwd || echo 'BAD: T.redir (print >>"foo")'
++$awk '{ print >>"foo" }' ./passwd
++diff foo ./passwd || echo 'BAD: T.redir (print >>"foo")'
+ 
+ rm -f foo
+ $awk 'NR%2 == 1 { print >>"foo" }
+-      NR%2 == 0 { print >"foo" }' /etc/passwd
+-diff foo /etc/passwd || echo 'BAD: T.redir (print > and >>"foo")'
++      NR%2 == 0 { print >"foo" }' ./passwd
++diff foo ./passwd || echo 'BAD: T.redir (print > and >>"foo")'
+ 
+ rm -f foo
+-$awk '{ print | "cat >foo" }' /etc/passwd
+-diff foo /etc/passwd || echo 'BAD: T.redir (print | "cat >foo")'
++$awk '{ print | "cat >foo" }' ./passwd
++diff foo ./passwd || echo 'BAD: T.redir (print | "cat >foo")'
+ 
+ # tests flush of stdout before opening pipe
+ echo '   head
+@@ -28,11 +28,11 @@ $awk 'BEGIN { print "   head"
+ diff foo1 foo2 || echo 'BAD: T.redir (buffering)'
+ 
+ rm -f foo[12]
+-$awk '{ print >"/dev/stderr" }' /etc/passwd 1>foo1 2>foo2
+-diff foo2 /etc/passwd || echo 'BAD: T.redir (print >"/dev/stderr")'
++$awk '{ print >"/dev/stderr" }' ./passwd 1>foo1 2>foo2
++diff foo2 ./passwd || echo 'BAD: T.redir (print >"/dev/stderr")'
+ diff foo1 /dev/null  || echo 'BAD: T.redir (print >"/dev/stderr")'
+ 
+ rm -f foo[12]
+-$awk '{ print >"/dev/stdout" }' /etc/passwd 1>foo1 2>foo2
+-diff foo1 /etc/passwd || echo 'BAD: T.redir (print >"/dev/stdout")'
++$awk '{ print >"/dev/stdout" }' ./passwd 1>foo1 2>foo2
++diff foo1 ./passwd || echo 'BAD: T.redir (print >"/dev/stdout")'
+ diff foo2 /dev/null  || echo 'BAD: T.redir (print >"/dev/stderr")'
+--- testdir/T.split
++++ testdir/T.split
+@@ -66,7 +66,7 @@ diff $TEMP1 $TEMP2 || fail 'BAD: T.split 0.3'
+ echo 'f b a' > $TEMP0
+ $awk '{
+ 	FS = ":"
+-	getline a < "/etc/passwd"
++	getline a < "./passwd"
+ 	print $1
+ }' $TEMP0 > $TEMP1
+ echo 'f' > $TEMP2
+@@ -113,7 +113,7 @@ f
+ 
+      ' > $TEMP0
+ who | sed 10q  >> $TEMP0
+-sed 10q /etc/passwd >> $TEMP0
++sed 10q ./passwd >> $TEMP0
+ 
+ $awk '
+ {	n = split($0, x, "")
+--- testdir/funstack.awk
++++ testdir/funstack.awk
+@@ -637,7 +637,7 @@ function html_header()
+ 	"date" | getline DATE
+ 	("ypcat passwd | grep '^" USER ":' | awk -F: '{print $5}'") | getline PERSONAL_NAME
+ 	if (PERSONAL_NAME == "")
+-	    ("grep  '^" USER ":' /etc/passwd | awk -F: '{print $5}'") | getline PERSONAL_NAME
++	    ("grep  '^" USER ":' ./passwd | awk -F: '{print $5}'") | getline PERSONAL_NAME
+ 
+ 
+ 	print "<!-- WARNING: Do NOT edit this file.  It was converted from -->"
+new file mode 100644
+--- /dev/null
++++ testdir/passwd
+@@ -0,0 +1 @@
++root:x:0:0:root:/root:/bin/bash

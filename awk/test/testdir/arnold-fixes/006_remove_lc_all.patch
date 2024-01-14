@@ -1,0 +1,11 @@
+--- testdir/arnold-fixes/space.awk
++++ testdir/arnold-fixes/space.awk
+@@ -8,7 +8,7 @@ BEGIN {
+ 	c["\t"] = "\\t"
+ 	c["\v"] = "\\v"
+ 
+-	sort = "LC_ALL=C sort"
++	sort = "sort"
+ 
+ 	for (i in c)
+ 		printf("%s %s [[:space:]]\n", c[i],
