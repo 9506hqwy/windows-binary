@@ -1,0 +1,83 @@
+name: awk
+
+on:
+  push:
+    branches: [ main ]
+    tags-ignore: [ '**' ]
+    paths: [ 'awk/**' ]
+  workflow_dispatch:
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: ./awk
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Install Build Tools
+      run: |
+        sudo apt-get update
+        sudo apt-get install \
+            build-essential \
+            mingw-w64 \
+            bison \
+            patch
+
+    - name: Build
+      run: bash ./build.sh
+
+    - uses: actions/cache/save@v3
+      with:
+        key: awk-${{ github.run_number }}
+        path : |
+          awk/src/a.exe
+          awk/src/testdir/echo.exe
+        enableCrossOsArchive: true
+
+    - name: Test on Linux
+      run: |
+        cd src
+        git restore .
+        git clean -d -f -x
+        bash ./REGRESS
+      continue-on-error: true
+
+  test:
+
+    needs: build
+
+    runs-on: windows-latest
+
+    defaults:
+      run:
+        shell: bash
+        working-directory: ./awk
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Prepare Source
+      run: git clone --depth 1 https://github.com/onetrueawk/awk.git src
+
+    - uses: actions/cache/restore@v3
+      with:
+        key: awk-${{ github.run_number }}
+        path : |
+          awk/src/a.exe
+          awk/src/testdir/echo.exe
+        enableCrossOsArchive: true
+        fail-on-cache-miss: true
+
+    - name: Patch
+      run: bash ./test.sh
+
+    - name: Test on Windows
+      run: |
+        cd src
+        bash ./REGRESS
+      continue-on-error: true
