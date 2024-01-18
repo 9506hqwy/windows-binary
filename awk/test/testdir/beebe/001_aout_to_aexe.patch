@@ -1,0 +1,109 @@
+--- testdir/beebe/ChangeLog
++++ testdir/beebe/ChangeLog
+@@ -62,7 +62,7 @@ Sun Jun 22 16:17:35 1997  Arnold D. Robbins  <arnold@gnu.org>
+ 
+ Wed Jun  4 13:18:21 1997  Arnold D. Robbins  <arnold@gnu.org>
+ 
+-	* pid.sh: send errors to /dev/null to toss warning about
++	* pid.sh: send errors to /dev/null to toss warning a.exe
+ 	  using PROCINFO["pid"] etc. This test explicitly tests
+ 	  the special files. It'll need changing in 3.2.
+ 
+--- testdir/beebe/Makefile
++++ testdir/beebe/Makefile
+@@ -22,7 +22,7 @@
+ SHELL = /bin/sh
+ AWK = ../gawk
+ AWK = awk
+-AWK = ../../a.out
++AWK = ../../a.exe
+ CMP = cmp
+ 
+ srcdir = @srcdir@
+--- testdir/beebe/fflush.sh
++++ testdir/beebe/fflush.sh
+@@ -1,16 +1,16 @@
+ #! /bin/sh
+-../a.out 'BEGIN{print "1st";fflush("/dev/stdout");print "2nd"|"cat"}'
++../a.exe 'BEGIN{print "1st";fflush("/dev/stdout");print "2nd"|"cat"}'
+ 
+-../a.out 'BEGIN{print "1st";fflush("/dev/stdout");print "2nd"|"cat"}'|cat
++../a.exe 'BEGIN{print "1st";fflush("/dev/stdout");print "2nd"|"cat"}'|cat
+ 
+-../a.out 'BEGIN{print "1st";fflush("/dev/stdout");close("/dev/stdout");print "2nd"|"cat"}'|cat
++../a.exe 'BEGIN{print "1st";fflush("/dev/stdout");close("/dev/stdout");print "2nd"|"cat"}'|cat
+ 
+-../a.out 'BEGIN{print "1st";fflush("/dev/stdout");print "2nd"|"cat";close("cat")}'|cat
++../a.exe 'BEGIN{print "1st";fflush("/dev/stdout");print "2nd"|"cat";close("cat")}'|cat
+ 
+-../a.out 'BEGIN{print "1st";fflush("/dev/stdout");print "2nd"|"cat";close("cat")}'|cat
++../a.exe 'BEGIN{print "1st";fflush("/dev/stdout");print "2nd"|"cat";close("cat")}'|cat
+ 
+-../a.out 'BEGIN{print "1st";fflush("/dev/stdout");print "2nd"|"cat";close("cat")}'|cat
++../a.exe 'BEGIN{print "1st";fflush("/dev/stdout");print "2nd"|"cat";close("cat")}'|cat
+ 
+-../a.out 'BEGIN{print "1st";fflush("/dev/stdout");print "2nd"|"sort"}'|cat
++../a.exe 'BEGIN{print "1st";fflush("/dev/stdout");print "2nd"|"sort"}'|cat
+ 
+-../a.out 'BEGIN{print "1st";fflush("/dev/stdout");print "2nd"|"sort";close("sort")}'|cat
++../a.exe 'BEGIN{print "1st";fflush("/dev/stdout");print "2nd"|"sort";close("sort")}'|cat
+--- testdir/beebe/funstack.in
++++ testdir/beebe/funstack.in
+@@ -47,7 +47,7 @@
+ %%%                             Total entries: 1258
+ %%%
+ %%%                        The size of the original cacm.bib file
+-%%%                        covering 1958--1996 became too large (about
++%%%                        covering 1958--1996 became too large (a.exe
+ %%%                        4000 entries) for BibTeX and TeX to handle,
+ %%%                        so at version 1.44, it was split into
+ %%%                        cacm1950.bib, cacm1960.bib, cacm1970.bib,
+--- testdir/beebe/manpage
++++ testdir/beebe/manpage
+@@ -133,7 +133,7 @@ Print the short version of the GNU copyright information message on
+ the error output.
+ .TP
+ .B lint
+-Provide warnings about constructs that are
++Provide warnings a.exe constructs that are
+ dubious or non-portable to other AWK implementations.
+ .TP
+ .B posix
+--- testdir/beebe/pid.sh
++++ testdir/beebe/pid.sh
+@@ -1,5 +1,5 @@
+ #! /bin/sh
+-AWK=${AWK-../a.out}
++AWK=${AWK-../a.exe}
+ echo $$ > _pid.in
+ echo $1 >> _pid.in
+ exec $AWK -f pid.awk _pid.in 2>/dev/null
+--- testdir/beebe/reg/exp.out
++++ testdir/beebe/reg/exp.out
+@@ -1,3 +1,3 @@
+-1 /a/sundown/export/home/0002/beebe/src/bwkawk/19990416/test/../a.out: exp result out of range
++1 /a/sundown/export/home/0002/beebe/src/bwkawk/19990416/test/../a.exe: exp result out of range
+  source line number 1
+ 1 1.64872
+--- testdir/beebe/reg/func.out
++++ testdir/beebe/reg/func.out
+@@ -1,2 +1,2 @@
+-/a/sundown/export/home/0002/beebe/src/bwkawk/19990416/test/../a.out: calling undefined function dummy
++/a/sundown/export/home/0002/beebe/src/bwkawk/19990416/test/../a.exe: calling undefined function dummy
+  source line number 1
+--- testdir/beebe/reg/func2.out
++++ testdir/beebe/reg/func2.out
+@@ -1,2 +1,2 @@
+-/a/sundown/export/home/0002/beebe/src/bwkawk/19990416/test/../a.out: can't read value of dummy; it's a function.
++/a/sundown/export/home/0002/beebe/src/bwkawk/19990416/test/../a.exe: can't read value of dummy; it's a function.
+  source line number 2
+--- testdir/beebe/reg/log.out
++++ testdir/beebe/reg/log.out
+@@ -1,5 +1,5 @@
+-/a/sundown/export/home/0002/beebe/src/bwkawk/19990416/test/../a.out: log result out of range
++/a/sundown/export/home/0002/beebe/src/bwkawk/19990416/test/../a.exe: log result out of range
+  source line number 1
+-1 /a/sundown/export/home/0002/beebe/src/bwkawk/19990416/test/../a.out: log argument out of domain
++1 /a/sundown/export/home/0002/beebe/src/bwkawk/19990416/test/../a.exe: log argument out of domain
+  source line number 1
+ 1 4.60517

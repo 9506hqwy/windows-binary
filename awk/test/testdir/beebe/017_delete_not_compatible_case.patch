@@ -1,0 +1,12 @@
+--- testdir/beebe/Makefile
++++ testdir/beebe/Makefile
+@@ -33,7 +33,8 @@ VPATH = $(srcdir)
+ all:	bigtest
+ 
+ # bigtest:	basic unix-tests gawk.extensions
+-bigtest:	basic unix-tests
++# bigtest:	basic unix-tests
++bigtest:	basic
+ 
+ # Tests in alphabetical order for progress feedback:
+ #

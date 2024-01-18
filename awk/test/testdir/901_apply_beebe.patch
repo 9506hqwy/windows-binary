@@ -1,0 +1,13 @@
+--- testdir/T.beebe
++++ testdir/T.beebe
+@@ -4,4 +4,10 @@ echo T.beebe: tests from nelson beebe from gawk test suite
+ rm -rf beebe
+ tar xf beebe.tar	# creates beebe
+ cd beebe
++
++for p in $(ls ../../../test/testdir/beebe/*.patch)
++do
++  patch -p 2 -u < $p
++done
++
+ MSYS_NO_PATHCONV=1 make all | sed 's/^/	/' | grep -v 'diff -b'

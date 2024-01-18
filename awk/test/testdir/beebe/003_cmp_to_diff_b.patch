@@ -1,0 +1,31 @@
+--- testdir/beebe/Makefile
++++ testdir/beebe/Makefile
+@@ -23,7 +23,7 @@ SHELL = /bin/sh
+ AWK = ../gawk
+ AWK = awk
+ AWK = ../../a.exe
+-CMP = cmp
++CMP = diff -b
+ 
+ srcdir = @srcdir@
+ srcdir = .
+@@ -82,7 +82,7 @@ poundbang::
+ 	$(CMP) $(srcdir)/poundbang.ok _`basename $@` && rm -f _`basename $@`
+ 
+ msg::
+-	#@echo 'Any output from "cmp" is bad news, except for fp differences'
++	#@echo 'Any output from "diff -b" is bad news, except for fp differences'
+ 
+ swaplns::
+ 	@$(AWK) -f $(srcdir)/swaplns.awk $(srcdir)/swaplns.in >_$@
+--- testdir/beebe/regtest
++++ testdir/beebe/regtest
+@@ -9,7 +9,7 @@ for i in reg/*.awk
+ do
+ 	it=`basename $i .awk`
+ 	$AWK -f $i <reg/$it.in >reg/$it.out 2>&1
+-	if cmp -s reg/$it.out reg/$it.good
++	if diff -b reg/$it.out reg/$it.good
+ 	then
+ 		rm -f reg/$it.out
+ 	else

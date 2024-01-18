@@ -9,6 +9,14 @@
  diff -b foo1 foo2 || echo 'BAD: T.-f-f  -f -'
  
  
+--- testdir/T.beebe
++++ testdir/T.beebe
+@@ -4,4 +4,4 @@ echo T.beebe: tests from nelson beebe from gawk test suite
+ rm -rf beebe
+ tar xf beebe.tar	# creates beebe
+ cd beebe
+-make all | sed 's/^/	/' | grep -v 'diff -b'
++MSYS_NO_PATHCONV=1 make all | sed 's/^/	/' | grep -v 'diff -b'
 --- testdir/T.misc
 +++ testdir/T.misc
 @@ -69,7 +69,7 @@ diff -b foo1 foo2 || echo 1>&2 "BAD: T.misc bad overflow"
