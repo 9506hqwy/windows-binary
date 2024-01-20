@@ -73,6 +73,12 @@ jobs:
         enableCrossOsArchive: true
         fail-on-cache-miss: true
 
+    - name: Change CodePage To Unicode
+      shell: cmd
+      run: |
+        mt.exe -manifest "templ\utf8.manifest" -outputresource:"src\a.exe"
+        mt.exe -manifest "templ\utf8.manifest" -outputresource:"src\testdir\echo.exe"
+
     - name: Patch
       run: bash ./test.sh
 
