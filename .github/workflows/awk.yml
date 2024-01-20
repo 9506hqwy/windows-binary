@@ -76,6 +76,7 @@ jobs:
     - name: Change CodePage To Unicode
       shell: cmd
       run: |
+        set PATH=%PATH%;C:\Program Files (x86)\Windows Kits\10\bin\10.0.22621.0\x64;
         mt.exe -manifest "templ\utf8.manifest" -outputresource:"src\a.exe"
         mt.exe -manifest "templ\utf8.manifest" -outputresource:"src\testdir\echo.exe"
 
