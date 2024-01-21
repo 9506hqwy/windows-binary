@@ -85,6 +85,10 @@ jobs:
 
     - name: Test on Windows
       run: |
+        chcp.com
+        MSYS_NO_PATHCONV=1 reg.exe add 'HKCU\SOFTWARE\Microsoft\Command Processor' /v 'Autorun' /d '@chcp 65001 > nul'
+        chcp.com 65001
+
         cd src
         bash ./REGRESS
       continue-on-error: true
