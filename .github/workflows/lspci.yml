@@ -1,0 +1,38 @@
+name: lspci
+
+on:
+  push:
+    branches: [ main ]
+    tags-ignore: [ '**' ]
+    paths: [ 'lspci/**' ]
+  workflow_dispatch:
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: ./lspci
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Install Build Tools
+      run: |
+        sudo apt-get update
+        sudo apt-get install \
+            build-essential \
+            mingw-w64 \
+            zip
+
+    - name: Build
+      run: bash ./build.sh
+
+    - name: Create Artifacts
+      run: |
+        mkdir -p ../artifacts
+        VERSION=$(grep '^VERSION=' Makefile | cut -d '=' -f 2)
+        zip ../artifacts/lspci-${VERSION}.zip lspci.exe COPYING
+      working-directory: ./lspci/src
