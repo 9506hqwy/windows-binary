@@ -1,0 +1,15 @@
+--- Makefile.wnm
++++ Makefile.wnm
+@@ -34,10 +34,10 @@
+ all: less.exe lesskey.exe
+ 
+ less.exe: $(OBJ)
+-	$(LD) $(LDFLAGS) $** $(LIBS) /out:$@
++	$(LD) $(LDFLAGS) $** $(LIBS) less.res /out:$@
+ 
+ lesskey.exe: lesskey.obj lesskey_parse.obj version.obj xbuf.obj
+-	$(LD) $(LDFLAGS) lesskey.obj lesskey_parse.obj version.obj xbuf.obj $(LIBS) /out:$@
++	$(LD) $(LDFLAGS) lesskey.obj lesskey_parse.obj version.obj xbuf.obj $(LIBS) lesskey.res /out:$@
+ 
+ defines.h: defines.wn
+ 	-del defines.h

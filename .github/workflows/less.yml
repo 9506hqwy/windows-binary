@@ -1,0 +1,37 @@
+name: less
+
+on:
+  push:
+    branches: [ main ]
+    tags-ignore: [ '**' ]
+    paths: [ 'less/**' ]
+  workflow_dispatch:
+
+jobs:
+  build:
+
+    runs-on: windows-latest
+
+    defaults:
+      run:
+        working-directory: ./less
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Build
+      shell: cmd
+      run: |
+        SET BASH=C:\Program Files\Git\bin\bash.exe
+        SET PATH=%PATH%;C:\Program Files\7-Zip
+        SET PATH=%PATH%;C:\Program Files (x86)\Windows Kits\10\bin\10.0.22621.0\x64
+        CALL "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
+        .\build.bat
+
+    - name: Create Artifacts
+      run: |
+        New-Item -Path '..\artifacts' -ItemType 'Directory' -Force
+        Get-Content ".\version.c" |? { $_.Contains('version[]') } |% { $_ -match '"(\d+)"' } > $null
+        $VERSION = $Matches[1]
+        Compress-Archive -Path less.exe, lesskey.exe, COPYING, LICENSE -DestinationPath "..\artifacts\less-${VERSION}.zip"
+      working-directory: ./less/src
