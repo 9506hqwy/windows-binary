@@ -31,7 +31,7 @@ jobs:
     - name: Build
       run: bash ./build.sh
 
-    - uses: actions/cache/save@v3
+    - uses: actions/cache/save@v4
       with:
         key: awk-${{ github.run_number }}
         path : |
@@ -64,7 +64,7 @@ jobs:
     - name: Prepare Source
       run: git clone --depth 1 https://github.com/onetrueawk/awk.git src
 
-    - uses: actions/cache/restore@v3
+    - uses: actions/cache/restore@v4
       with:
         key: awk-${{ github.run_number }}
         path : |
