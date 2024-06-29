@@ -1,0 +1,7 @@
+artifacts/
+build/
+install/
+src/
+
+*~
+*.tar.gz

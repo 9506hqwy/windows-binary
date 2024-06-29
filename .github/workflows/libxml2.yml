@@ -1,0 +1,33 @@
+name: libxml2
+
+on:
+  push:
+    branches: [ main ]
+    tags-ignore: [ '**' ]
+    paths: [ 'libxml2/**' ]
+  workflow_dispatch:
+
+jobs:
+  build:
+
+    runs-on: windows-latest
+
+    defaults:
+      run:
+        working-directory: ./libxml2
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Build
+      shell: cmd
+      run: |
+        CALL "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
+        .\build.bat
+
+    - name: Create Artifacts
+      run: |
+        New-Item -Path '.\artifacts' -ItemType 'Directory' -Force
+        Get-ChildItem .\src\*.tar.gz |% { $_.Name -match 'libxml2-v(.+).tar.gz' } > $null
+        $VERSION = $Matches[1]
+        Compress-Archive -Path install\* -DestinationPath ".\artifacts\libxml2-${VERSION}.zip"
