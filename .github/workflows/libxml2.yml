@@ -17,7 +17,7 @@ jobs:
         working-directory: ./libxml2
 
     steps:
-    - uses: actions/checkout@v5
+    - uses: actions/checkout@v6
 
     - name: Build
       shell: cmd
